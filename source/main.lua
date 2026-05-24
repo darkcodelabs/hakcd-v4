@@ -8,9 +8,15 @@ import 'libraries/gfxp/gfxp'
 
 import 'utilities/Utilities'
 
+-- Agent 5 (CONTENT): wires sound_manifest global. Scenes call
+-- sound_manifest.play_sfx(name) / sound_manifest.music_for(scene_name).
+import 'sounds/manifest'
+
 import 'sprites/Newb'
 import 'scenes/TitleScene'
 import 'scenes/SpriteTestScene'
+import 'scenes/BedroomScene'
+import 'scenes/PlaygroundScene'
 
 Noble.showFPS = false
 

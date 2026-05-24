@@ -47,6 +47,8 @@ builds/
 
 source/libraries/noble/docs/
 
-# Audio masters — Agent 5 (CONTENT) sources and commits to source/sounds/
-# encoded for Playdate. WAV masters stay out of git to keep clone size sane.
-source/sounds/music/*.wav
+# Audio masters — Bootstrap's normalized 25-track keygen pool. These live
+# OUTSIDE source/ so pdc doesn't bundle them into the .pdx, and they're
+# gitignored to keep clone size sane. Only the 5 encoded loops under
+# source/sounds/music/*_loop.wav ship.
+assets/sounds/music_masters/
