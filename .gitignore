@@ -1,0 +1,52 @@
+# Compiled Lua sources
+luac.out
+
+# luarocks build files
+*.src.rock
+*.zip
+*.tar.gz
+
+# Object files
+*.o
+*.os
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.def
+*.exp
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+.vscode
+
+build/
+builds/
+*.pdx/
+
+source/libraries/noble/docs/
+
+# Audio masters — Agent 5 (CONTENT) sources and commits to source/sounds/
+# encoded for Playdate. WAV masters stay out of git to keep clone size sane.
+source/sounds/music/*.wav

@@ -1,0 +1,40 @@
+# HAKCD keygen-scraper music loudness baseline
+# Measured 2026-05-24 against -14 LUFS target (LRA=11, tp=-1.5).
+# Acceptance window: ±3 dB (so -17 to -11 LUFS).
+# Source: /home/hakcer/projects/personal/hakcd/source/sounds/music/*.wav (25 tracks).
+#
+# Format: filename<TAB>pre_LUFS<TAB>action(COPY|NORM)
+sc01_bedroom_recurring_hub.wav	-23.72	NORM
+sc02_deadline_bbs.wav	-15.22	COPY
+sc03_war_dialer_interface.wav	-17.32	NORM
+sc04_corporate_bbs_phoenixdown.wav	-16.37	COPY
+sc05_the_phone_bill.wav	-23.39	NORM
+sc06_aol_signup_cutscene.wav	-24.12	NORM
+sc07_aol_buddy_list.wav	-19.19	NORM
+sc08_warezlobby.wav	-23.34	NORM
+sc09_cyberlounge.wav	-31.28	NORM
+sc10_phreakkingdom.wav	-15.25	COPY
+sc11_hpvac.wav	-17.00	COPY
+sc12_privatechan7.wav	-17.98	NORM
+sc13_icq_window_overlay.wav	-19.29	NORM
+sc14_bedroom_return.wav	-18.55	NORM
+sc15_greyhound_station_payphone.wav	-29.23	NORM
+sc16_k0nsole_conversation.wav	-24.18	NORM
+sc17_bell_pedestal_in.wav	-18.20	NORM
+sc18_telco_switching_office.wav	-26.72	NORM
+sc19_aegis_network_reconnaissance.wav	-29.54	NORM
+sc20_aegis_tech_support.wav	-18.53	NORM
+sc21_inside_the_aegis.wav	-15.81	COPY
+sc22_redhooks_chatroom.wav	-23.80	NORM
+sc23_release_decision_scene.wav	-27.43	NORM
+sc24_exfiltration.wav	-21.25	NORM
+title.wav	-26.83	NORM
+
+# Post-normalization spot-checks:
+#   sc01_bedroom_recurring_hub.wav -> -17.14 LUFS (was -23.72; +6.58 dB)
+#   sc09_cyberlounge.wav -> -14.26 LUFS (was -31.28; +17.02 dB)
+#   title.wav -> -14.69 LUFS (was -26.83; +12.14 dB)
+
+# Summary: 5 of 25 already in band, 20 normalized via single-pass loudnorm.
+# Normalized WAVs are on disk at source/sounds/music/ but gitignored.
+# Agent 5 (CONTENT) will encode to Playdate-friendly format and commit.
