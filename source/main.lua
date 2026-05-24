@@ -14,13 +14,49 @@ import 'sounds/manifest'
 
 import 'sprites/Newb'
 import 'scenes/TitleScene'
-import 'scenes/SpriteTestScene'
+import 'scenes/SpriteTestScene'   -- importable for ad-hoc sprite testing
 import 'scenes/BedroomScene'
 import 'scenes/PlaygroundScene'
+import 'scenes/LockpickScene'
+import 'scenes/TysonScene'
+import 'scenes/CoinVaultScene'
 
 Noble.showFPS = false
 
--- TEMP (Agent 2 / SPRITE): boot straight into SpriteTestScene so a sideload
--- verifies the newb 32x32 imagetable + d-pad-driven AnimatedSprite FSM.
--- Agent 4 (PORT) will restore `Noble.new(TitleScene)` when wiring scene flow.
-Noble.new(SpriteTestScene)
+-- Boot scene is the canonical title (Agent 4 / PORT). SpriteTestScene is
+-- still importable so devs can wire it in manually for ad-hoc testing.
+Noble.new(TitleScene)
+
+-- System menu items (registered after Noble.new so getSystemMenu is live).
+-- "pwnglove mode"  jumps straight to the playground sandbox (cheats in for
+--                  demos and dev runs). Pushes a checkpoint of the previous
+--                  scene name to a tiny module-local stack so "back to
+--                  story" can return.
+-- "back to story"  pops that checkpoint and returns to TitleScene
+--                  (or whatever was checkpointed).
+local _scene_checkpoint = nil
+
+local function push_checkpoint()
+    local cur = Noble.currentScene()
+    if cur and cur.className then
+        _scene_checkpoint = cur.className
+    end
+end
+
+local function restore_checkpoint()
+    local target_name = _scene_checkpoint
+    _scene_checkpoint = nil
+    local target = (target_name and _G[target_name]) or TitleScene
+    Noble.transition(target)
+end
+
+local menu = playdate.getSystemMenu()
+if menu then
+    menu:addMenuItem('pwnglove mode', function()
+        push_checkpoint()
+        Noble.transition(PlaygroundScene)
+    end)
+    menu:addMenuItem('back to story', function()
+        restore_checkpoint()
+    end)
+end

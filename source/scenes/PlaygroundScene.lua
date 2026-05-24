@@ -125,19 +125,46 @@ function PlaygroundScene:update()
     end
     self.activeHotspot = active
 
+    -- A-press: route playground hotspots to the right minigame scene.
+    --   lockpick_station -> LockpickScene
+    --   tyson_cabinet    -> TysonScene
+    --   coin_vault       -> CoinVaultScene
+    -- Each minigame is told to come back to PlaygroundScene via return_scene.
     if playdate.buttonJustPressed(playdate.kButtonA) and self.activeHotspot then
-        -- TODO Agent 4: route by hotspot_id to LockpickScene / TysonScene / CoinVaultScene
-        print('PlaygroundScene hotspot A:', self.activeHotspot.hotspot_id)
+        local id = self.activeHotspot.hotspot_id
+        if id == 'lockpick_station' and _G.LockpickScene then
+            Noble.transition(LockpickScene, nil, nil, nil,
+                             { return_scene = PlaygroundScene })
+        elseif id == 'tyson_cabinet' and _G.TysonScene then
+            Noble.transition(TysonScene, nil, nil, nil,
+                             { return_scene = PlaygroundScene })
+        elseif id == 'coin_vault' and _G.CoinVaultScene then
+            Noble.transition(CoinVaultScene, nil, nil, nil,
+                             { return_scene = PlaygroundScene })
+        else
+            self._dialog_text = '[placeholder] ' .. tostring(id)
+            self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2200
+        end
+    end
+    if self._dialog_until_ms and playdate.getCurrentTimeMilliseconds() > self._dialog_until_ms then
+        self._dialog_text = nil
+        self._dialog_until_ms = nil
     end
 end
 
 function PlaygroundScene:drawForeground()
     PlaygroundScene.super.drawForeground(self)
+    local gfx = playdate.graphics
     if self.activeHotspot then
-        local gfx = playdate.graphics
         gfx.fillRect(0, 220, 400, 20)
         gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
         gfx.drawText('[A] ' .. self.activeHotspot.label, 8, 224)
+        gfx.setImageDrawMode(gfx.kDrawModeCopy)
+    end
+    if self._dialog_text then
+        gfx.fillRect(0, 200, 400, 18)
+        gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
+        gfx.drawText(self._dialog_text, 8, 203)
         gfx.setImageDrawMode(gfx.kDrawModeCopy)
     end
 end

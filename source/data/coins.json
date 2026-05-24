@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "comment": "Per-coin metadata for the 23 C0iNS Coin Vault viewer. Grounded in NoDataFound/23Coins (real-world repo) — see docs/phase5_pwnglove_coins_priority.md + docs/phase5_canonical_pins_and_coin_vault.md",
+  "total_coins": 24,
+  "coins": [
+    {
+      "id": 0,
+      "title": "WELCOME COIN",
+      "status_default": "minted",
+      "art_grid": "images/coins/coin_0",
+      "art_closeup": "images/coins/coin_0_large",
+      "dialog": {
+        "grid_highlight": "Coin Zero. Minted on first visit. Phrase locked. Coin One waiting. Let's see what it wants.",
+        "closeup": "Twenty-three. The number SecKC chose. Year I started cracking BBSes.",
+        "linger": "Lloyd Blankenship would've appreciated this. Mentor's manifesto, '86."
+      }
+    },
+    {
+      "id": 1,
+      "title": "ROTARY DIAL",
+      "status_default": "available",
+      "art_grid": "images/coins/coin_1",
+      "art_closeup": "images/coins/coin_1_large",
+      "dialog": {
+        "grid_highlight": "Coin One. Phone dial. Phreaker shit. The border text rotates — that's a Bacon cipher or I'm an idiot.",
+        "closeup": "The face in the middle. Some kind of grinning Bond villain. Probably means something.",
+        "linger": "AABBB ABBAB AAABB. That's letters. Need to decode it."
+      }
+    },
+    {
+      "id": 2,
+      "title": "LOST WAGES",
+      "status_default": "available",
+      "art_grid": "images/coins/coin_2",
+      "art_closeup": "images/coins/coin_2_large",
+      "dialog": {
+        "grid_highlight": "Coin Two. This one's a fucking maze. Speak & Spell, Vegas, Francis Bacon, text adventure. What is this?",
+        "closeup": "PBEL. That's PBEL backwards. Or anagrammed. Or both.",
+        "linger": "'Suddenly you are standing in the cavern that is the evil mind of PBEL.' Zork meets paranoid hacker fiction.",
+        "long_linger": "I lived here too long. Speak & Spell knows what I'm talking about."
+      }
+    },
+    {
+      "id": 3,
+      "title": "YODA HASH",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_3",
+      "art_closeup": "images/coins/coin_3_large",
+      "dialog": {
+        "grid_highlight": "Coin Three. Yoda. With a hash tattoo. Sure.",
+        "closeup": "1QZ9M9G3E6WXK7. That's 14 chars. Bitcoin-style address compression? Or it spells something.",
+        "linger": "Marching ants on the cheek. Probably nothing. Probably everything."
+      }
+    }
+  ]
+}
