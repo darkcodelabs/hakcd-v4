@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "comment": "Per-coin metadata for the 23 C0iNS Coin Vault viewer. Grounded in NoDataFound/23Coins (real-world repo) — see docs/phase5_pwnglove_coins_priority.md + docs/phase5_canonical_pins_and_coin_vault.md",
+  "comment": "Per-coin metadata for the 23 C0iNS Coin Vault viewer. Grounded in NoDataFound/23Coins (real-world repo) \u2014 see docs/phase5_pwnglove_coins_priority.md + docs/phase5_canonical_pins_and_coin_vault.md",
   "total_coins": 24,
   "coins": [
     {
@@ -22,7 +22,7 @@
       "art_grid": "images/coins/coin_1",
       "art_closeup": "images/coins/coin_1_large",
       "dialog": {
-        "grid_highlight": "Coin One. Phone dial. Phreaker shit. The border text rotates — that's a Bacon cipher or I'm an idiot.",
+        "grid_highlight": "Coin One. Phone dial. Phreaker shit. The border text rotates \u2014 that's a Bacon cipher or I'm an idiot.",
         "closeup": "The face in the middle. Some kind of grinning Bond villain. Probably means something.",
         "linger": "AABBB ABBAB AAABB. That's letters. Need to decode it."
       }
@@ -50,6 +50,246 @@
         "grid_highlight": "Coin Three. Yoda. With a hash tattoo. Sure.",
         "closeup": "1QZ9M9G3E6WXK7. That's 14 chars. Bitcoin-style address compression? Or it spells something.",
         "linger": "Marching ants on the cheek. Probably nothing. Probably everything."
+      }
+    },
+    {
+      "id": 4,
+      "title": "BLUE BOX",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "2600Hz tone. Trunk seize. Phreaker scripture.",
+        "closeup": "Cap'n Crunch whistle. They put him in jail for this.",
+        "linger": "Free long distance was a felony. Worth it."
+      }
+    },
+    {
+      "id": 5,
+      "title": "RAINBOW BOOK",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Department of Defense crypto specs. Banned import.",
+        "closeup": "Department of Defense crypto specs. Banned import.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 6,
+      "title": "PHRACK 49",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "The Mentor's manifesto issue. 'This is our world now.'",
+        "closeup": "The Mentor's manifesto issue. 'This is our world now.'",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 7,
+      "title": "LOPHT KEYCAP",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "L0pht logo etched on an IBM Model M cap. Hacker shibboleth.",
+        "closeup": "L0pht logo etched on an IBM Model M cap. Hacker shibboleth.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 8,
+      "title": "ICE PHIBER",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Cold case. Ran the largest BBS network on the east coast '97-'99.",
+        "closeup": "Cold case. Ran the largest BBS network on the east coast '97-'99.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 9,
+      "title": "DEFCON 6",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "First DEFCON badge with active circuitry. 1998. The shift point.",
+        "closeup": "First DEFCON badge with active circuitry. 1998. The shift point.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 10,
+      "title": "WAR DIALER",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Toneloc beta build. ATDT 555-XXXX. 10000 numbers a night.",
+        "closeup": "Toneloc beta build. ATDT 555-XXXX. 10000 numbers a night.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 11,
+      "title": "BEIGE BOX",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Lineman's handset clone. Plug into any junction. Listen + dial.",
+        "closeup": "Lineman's handset clone. Plug into any junction. Listen + dial.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 12,
+      "title": "RED BOX",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Quarter-coin tone generator. Free payphones, '88-'94.",
+        "closeup": "Quarter-coin tone generator. Free payphones, '88-'94.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 13,
+      "title": "AOHELL",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Da Chronic's masterpiece. Punter, fader, mass mailer.",
+        "closeup": "Da Chronic's masterpiece. Punter, fader, mass mailer.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 14,
+      "title": "KEVIN MITNICK",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Wanted poster. 'Most wanted hacker.' FBI bounty $250k.",
+        "closeup": "Wanted poster. 'Most wanted hacker.' FBI bounty $250k.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 15,
+      "title": "CDC",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Cult of the Dead Cow. BO2K. The first real RAT.",
+        "closeup": "Cult of the Dead Cow. BO2K. The first real RAT.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 16,
+      "title": "2600 MAG",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Emmanuel Goldstein. Spring 1998 issue. Karl Strassburg cover.",
+        "closeup": "Emmanuel Goldstein. Spring 1998 issue. Karl Strassburg cover.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 17,
+      "title": "HACKERS '95",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Rollerblades, neon, Crackdown, Plague. Burn this poster.",
+        "closeup": "Rollerblades, neon, Crackdown, Plague. Burn this poster.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 18,
+      "title": "PRETTY GOOD PRIVACY",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Zimmerman vs the State Dept. Strong crypto as munition.",
+        "closeup": "Zimmerman vs the State Dept. Strong crypto as munition.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 19,
+      "title": "AGRIPPA",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Gibson's self-erasing poem. Run once, lost forever.",
+        "closeup": "Gibson's self-erasing poem. Run once, lost forever.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 20,
+      "title": "FRYGUY",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Legion of Doom alumnus. Did 2600 the way it was meant.",
+        "closeup": "Legion of Doom alumnus. Did 2600 the way it was meant.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 21,
+      "title": "ED FROM OZ",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "BBS sysop. Ran node 1 on every FidoNet hub west of I-95.",
+        "closeup": "BBS sysop. Ran node 1 on every FidoNet hub west of I-95.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 22,
+      "title": "KILLER POKE",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Commodore PET 6502. POKE 59458,62 burns the chip.",
+        "closeup": "Commodore PET 6502. POKE 59458,62 burns the chip.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
+      }
+    },
+    {
+      "id": 23,
+      "title": "CORY KENNEDY",
+      "status_default": "locked",
+      "art_grid": "images/coins/coin_locked",
+      "art_closeup": "images/coins/coin_locked",
+      "dialog": {
+        "grid_highlight": "Real-world phreaker. Builds power gloves now. You know him.",
+        "closeup": "Real-world phreaker. Builds power gloves now. You know him.",
+        "linger": "Phrase not yet discovered. Walk the BBS, find the hint."
       }
     }
   ]
