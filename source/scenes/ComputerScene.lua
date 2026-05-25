@@ -65,6 +65,9 @@ end
 
 function ComputerScene:enter(previousScene)
     ComputerScene.super.enter(self, previousScene)
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('ComputerScene')   -- aliases bedroom_loop
+    end
     self._previousScene = previousScene
     self.pageIdx = 1
     self.charCount = 0

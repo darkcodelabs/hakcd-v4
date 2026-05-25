@@ -26,6 +26,9 @@ end
 
 function PhoneScene:enter(previousScene)
     PhoneScene.super.enter(self, previousScene)
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('PhoneScene')   -- aliases bedroom_loop
+    end
     self._previousScene = previousScene
     self.idx = 1
     if sound_manifest and sound_manifest.play_sfx then

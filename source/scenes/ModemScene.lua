@@ -35,6 +35,9 @@ end
 
 function ModemScene:enter(previousScene)
     ModemScene.super.enter(self, previousScene)
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('ModemScene')   -- aliases bedroom_loop
+    end
     self._previousScene = previousScene
     self.stepIdx = 1
     self.stepStartMs = playdate.getCurrentTimeMilliseconds()
