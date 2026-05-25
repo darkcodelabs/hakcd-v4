@@ -65,6 +65,10 @@ end
 function scene:enter()
     scene.super.enter(self)
 
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('TysonScene')
+    end
+
     self.target = self._target
     self.slots = {}
     for i = 1, #self.target do

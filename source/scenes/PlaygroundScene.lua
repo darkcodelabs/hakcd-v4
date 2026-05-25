@@ -25,6 +25,10 @@ end
 function PlaygroundScene:enter(previousScene)
     PlaygroundScene.super.enter(self, previousScene)
 
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('PlaygroundScene')
+    end
+
     local gfx = playdate.graphics
 
     local layers = LDtk.get_layers(LEVEL_NAME) or {}

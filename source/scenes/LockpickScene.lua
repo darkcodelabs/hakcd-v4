@@ -146,6 +146,10 @@ end
 
 function scene:enter()
     scene.super.enter(self)
+    -- LockpickScene is silent during the minigame — only SFX, no music bed.
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('LockpickScene')   -- maps to nil = stops
+    end
     self:_reset_state()
 end
 

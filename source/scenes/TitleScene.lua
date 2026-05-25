@@ -19,6 +19,9 @@ end
 function scene:enter()
     scene.super.enter(self)
     self._enter_ms = playdate.getCurrentTimeMilliseconds()
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('TitleScene')
+    end
 end
 
 function scene:drawBackground()

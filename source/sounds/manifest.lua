@@ -17,6 +17,11 @@ local M = {}
 M.music_for_scene = {
     TitleScene      = 'sounds/music/title_loop',
     BedroomScene    = 'sounds/music/bedroom_loop',
+    -- Bedroom modal scenes share bedroom_loop so transitions in/out don't
+    -- restart the track (start_scene_music compares by path, not name).
+    ComputerScene   = 'sounds/music/bedroom_loop',
+    ModemScene      = 'sounds/music/bedroom_loop',
+    PhoneScene      = 'sounds/music/bedroom_loop',
     PlaygroundScene = 'sounds/music/playground_loop',
     LockpickScene   = nil,   -- silent during minigame
     TysonScene      = 'sounds/music/tyson_loop',
@@ -47,6 +52,40 @@ M.sfx_paths = {
         'sounds/sfx/step_2',
     },
 }
+
+-- Scene-bound music player. Single global fileplayer.
+-- Comparison is by PATH not scene name, so multiple scene names that
+-- alias to the same track (e.g. Bedroom + Computer + Modem + Phone all
+-- → bedroom_loop) keep playing through transitions without stop+restart.
+-- Pass nil scene_name or unknown scene to silence.
+M._currentMusic = nil       -- live fileplayer
+M._currentPath  = nil       -- path currently playing (or nil)
+
+function M.start_scene_music(scene_name)
+    local path = M.music_for_scene[scene_name]
+    if path == nil then
+        M.stop_scene_music()
+        return
+    end
+    if path == M._currentPath and M._currentMusic and M._currentMusic:isPlaying() then
+        return   -- same track already playing, no-op
+    end
+    M.stop_scene_music()
+    local fp = playdate.sound.fileplayer.new(path)
+    if not fp then return end
+    fp:setVolume(0.7)
+    fp:play(0)   -- 0 = loop forever
+    M._currentMusic = fp
+    M._currentPath  = path
+end
+
+function M.stop_scene_music()
+    if M._currentMusic then
+        M._currentMusic:stop()
+        M._currentMusic = nil
+    end
+    M._currentPath = nil
+end
 
 -- Play a one-shot SFX by manifest name. No-ops if the name is unknown so
 -- callers don't need to guard every call.

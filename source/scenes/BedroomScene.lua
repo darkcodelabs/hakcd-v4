@@ -32,6 +32,10 @@ end
 function BedroomScene:enter(previousScene)
     BedroomScene.super.enter(self, previousScene)
 
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('BedroomScene')
+    end
+
     local gfx = playdate.graphics
 
     -- Walk each tile layer in the LDtk level explicitly so we never depend on

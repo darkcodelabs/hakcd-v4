@@ -75,6 +75,10 @@ end
 function scene:enter()
     scene.super.enter(self)
 
+    if _G.sound_manifest and _G.sound_manifest.start_scene_music then
+        _G.sound_manifest.start_scene_music('CoinVaultScene')
+    end
+
     local data = load_coins_json()
     self._coin_by_id = {}
     if data and data.coins then
