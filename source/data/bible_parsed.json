@@ -1,0 +1,723 @@
+{
+  "_meta": {
+    "generated_by": "tools/bible/parse_bible.js",
+    "source": "docs/HAKCD_story_bible_v0.1.md",
+    "timestamp": "2026-05-25T23:39:19.922Z",
+    "do_not_hand_edit": true
+  },
+  "game_title": "HAKCD",
+  "genre": "cyberpunk-phreaker",
+  "tone": "noir-grounded-comic-relief",
+  "core_premise": "A 17-year-old in suburban America, 1998, war-dials into a BBS run by a hacker who's been dead for two years. The mentor on the other end is an autonomous program written before he died, and it's been waiting for someone curious enough to pick up where he left off. ---",
+  "timeline": "October 1998 through May 1999",
+  "structure_summary": "4 Acts, 32 beats total. Roughly 8/10/8/6. Estimated playtime: 4-6 hours for full completion. 2-3 hours for critical path with skips. ---",
+  "main_character": {
+    "id": "newb",
+    "source_section": "PROTAGONIST",
+    "summary": "Name: customizable (player picks a handle at game start via char_wheel; default \"newb\")."
+  },
+  "antagonist": {
+    "id": "redhook",
+    "source_section": "ANTAGONIST: REDHOOK",
+    "summary": "Appears in NFO files and Phrack footnotes from 1994-1995. Old-guard hacker who went pro. Now contracts for Aegis Datalink Solutions, the beltway company building Project HOLLOWPOINT."
+  },
+  "mentor": {
+    "id": "mentor",
+    "source_section": "THE MENTOR / THE DAEMON",
+    "summary": "Real name: Loyd-something. Died February 1996, single-vehicle accident, brake failure. Never fully investigated. Was the Mentor on DEADLINE BBS for 5 years before that."
+  },
+  "supporting_characters": [
+    {
+      "num": 1,
+      "id": "mom",
+      "name": "Mom (offscreen voice)",
+      "description": "The phone bill antagonist. Yells about the bill, the phone tying up the line, the late nights. Recurring interrupt mechanic throughout the game. Never seen on screen. Voice via dialog box only."
+    },
+    {
+      "num": 2,
+      "id": "the_mentor",
+      "name": "The Mentor",
+      "description": "First contact via DEADLINE BBS. Pre-reveal warmth. The relationship the player builds with him is the emotional spine of Act 1-2."
+    },
+    {
+      "num": 3,
+      "id": "phoenixdown",
+      "name": "PhoenixDown",
+      "description": "Active sysop of a corporate BBS the protagonist breaks into in Act 1. New-user verification gatekeeper. Suspicious but not hostile. The first NPC the protagonist has to social-engineer past."
+    },
+    {
+      "num": 4,
+      "id": "k0nsole",
+      "name": "k0nsole",
+      "description": "Mysterious second handle that starts watching the protagonist's posts in late Act 1. Real name and identity unknown. Could be friend, could be fed. Reappears in Act 3 in a major role."
+    },
+    {
+      "num": 5,
+      "id": "gigglebutt69",
+      "name": "GiGGLeBuTT69",
+      "description": "AOL chatroom horndog. Pure Larry energy. Recurring NPC in #cyber_lounge who keeps trying to \"cyber\" the protagonist. Source of one critical piece of information he doesn't realize he has. Played for laughs but useful."
+    },
+    {
+      "num": 6,
+      "id": "netranger94",
+      "name": "NetRanger94",
+      "description": "The obvious fed plant in #warez_lobby. \"Greetings fellow hackers.\" Asks suspicious questions. Comic relief in Act 2, sinister in Act 3 when the protagonist realizes Net was real."
+    },
+    {
+      "num": 7,
+      "id": "phractal",
+      "name": "phractal",
+      "description": "Old-head moderator of #h_p_v_a_c, the serious phreak room. Won't talk to the protagonist until they prove they've read the right textfiles. Mentor figure #2. The voice of legitimate scene cred."
+    },
+    {
+      "num": 8,
+      "id": "cr1m3l0rd",
+      "name": "Cr1M3L0RD",
+      "description": "14-year-old prodigy. Annoying. Brilliant. Knows things he shouldn't. Holds a piece of the HOLLOWPOINT puzzle without understanding what he has. Comic and tragic."
+    },
+    {
+      "num": 9,
+      "id": "xxx_d4rkn3ss_xxx",
+      "name": "xXx_d4rkn3ss_xXx",
+      "description": "Script kiddie who claims to have hacked NORAD. Hasn't. Provides comic relief and one accidentally-real lead in late Act 2."
+    },
+    {
+      "num": 10,
+      "id": "k0nsole",
+      "name": "k0nsole (revealed)",
+      "description": "The mystery handle from Act 1 turns out to be the surviving operator from the Mentor's original three recruits. Off-grid since they found out about HOLLOWPOINT. The protagonist's first real human ally. Gender ambiguous; player can read either."
+    },
+    {
+      "num": 11,
+      "id": "mrs_kowalski",
+      "name": "Mrs. Kowalski",
+      "description": "Telco line worker, mid-50s, sees the protagonist breaking into a Bell pedestal in Act 3. Doesn't report them. Asks one question that changes their understanding of what they're doing. Single scene, recurring importance."
+    },
+    {
+      "num": 12,
+      "id": "aegis_tech_support_agent",
+      "name": "Aegis Tech Support Agent (no name)",
+      "description": "Phone NPC the protagonist social-engineers in Act 4. Has a name tag but the player only sees it as \"TECH SUPPORT.\" Believes she's helping a vendor. Played sympathetically. The protagonist exploits her decency."
+    },
+    {
+      "num": 13,
+      "id": "redhook",
+      "name": "RedHook",
+      "description": "The antagonist. Single major appearance: the Act 4 chatroom confrontation. Doesn't fight the protagonist physically (this is a cyberpunk game, not an action game). Talks. Tries to delay-trace them. The conversation is the boss battle."
+    },
+    {
+      "num": 14,
+      "id": "the_mentor_s_wife",
+      "name": "The Mentor's wife (briefly mentioned in a found photo)",
+      "description": "Never speaks. Appears in a Polaroid the protagonist finds in Act 4 in an old file from the Mentor's machine. Grounds the dead man as a person. Quiet emotional beat."
+    },
+    {
+      "num": 15,
+      "id": "cory_k",
+      "name": "Cory K",
+      "description": "Cameo in the SecKC scene as a Knucklehead the older protagonist meets. Hands them a sticker. \"Welcome to the hive.\" One line, big payoff."
+    }
+  ],
+  "chapters": [
+    {
+      "act_num": 1,
+      "title": "THE BOARDS",
+      "section_name": "ACT 1: THE BOARDS",
+      "summary": "**Length target:** 60-75 minutes."
+    },
+    {
+      "act_num": 2,
+      "title": "THE GARDEN",
+      "section_name": "ACT 2: THE GARDEN",
+      "summary": "**Length target:** 90-120 minutes. Longest act. The comedy peak."
+    },
+    {
+      "act_num": 3,
+      "title": "THE WIRES",
+      "section_name": "ACT 3: THE WIRES",
+      "summary": "**Length target:** 75-90 minutes. Tone shifts. Less comedy, more paranoia."
+    },
+    {
+      "act_num": 4,
+      "title": "THE GAME",
+      "section_name": "ACT 4: THE GAME",
+      "summary": "**Length target:** 60-75 minutes. Tight. Climactic."
+    },
+    {
+      "act_num": 5,
+      "title": "Coda",
+      "section_name": "CODA (post-credits, unlocks after first completion)",
+      "summary": "Time-jumps to 2026. The player (now in old man status) visits SecKC at Knuckleheads. Meets the Cory K. cameo. Gets handed a sticker. End on a warm room full of people laughing. The mentor's daemon is still running somewhere."
+    }
+  ],
+  "scenes": [
+    {
+      "id": "sc01",
+      "name": "Bedroom (recurring hub)",
+      "act": "Act 1: The Boards (8 beats, 5 locations)",
+      "description": "Active throughout. Mom (offscreen voice). Computer, modem, phone, bed, desk, posters, soda cans, math homework. Primary mechanic: command terminal access, save game, inventory check. Exit: A press on the computer to go online, or walk around to inspect objects."
+    },
+    {
+      "id": "sc02",
+      "name": "DEADLINE BBS",
+      "act": "Act 1: The Boards (8 beats, 5 locations)",
+      "description": "Active Acts 1-2. The Mentor as sysop. Message bases (4 sub-boards), file area (textfiles, programs), private chat with Mentor. Primary mechanic: BBS navigation, file leeching, message posting. Reading textfiles teaches kombos. Exit: log off to bedroom."
+    },
+    {
+      "id": "sc03",
+      "name": "War dialer interface",
+      "act": "Act 1: The Boards (8 beats, 5 locations)",
+      "description": "Triggered from bedroom. Primary mechanic: crank scanning the exchange. Hits log to disk and unlock new BBS scenes. Exit: hang up."
+    },
+    {
+      "id": "sc04",
+      "name": "Corporate BBS (PhoenixDown)",
+      "act": "Act 1: The Boards (8 beats, 5 locations)",
+      "description": "One-time visit in Act 1 beat 4. Social engineering puzzle (talk to PhoenixDown to get past new-user gate). Primary mechanic: dialog tree, find textfile, leech, escape clean. Exit: log off."
+    },
+    {
+      "id": "sc05",
+      "name": "The phone bill cutscene",
+      "act": "Act 1: The Boards (8 beats, 5 locations)",
+      "description": "End of Act 1. Mom finds the bill. The interrupt mechanic culminates. The protagonist either has to pay her back, lie convincingly, or get caught. Outcome affects Act 2's available money."
+    },
+    {
+      "id": "sc06",
+      "name": "AOL signup cutscene",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "The CD goes in. The handshake plays. The \"Welcome\" voice. New user registration. The shell loads. Primary mechanic: experiential, not interactive. Establishes the AOL UI as the dominant chrome for Act 2."
+    },
+    {
+      "id": "sc07",
+      "name": "AOL Buddy List / Mail / Chat hub",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "Active Act 2 onward. ICQ also unlocks here. Primary mechanic: navigation through the AOL shell to reach chatrooms, mail, ICQ. Inventory of contacts."
+    },
+    {
+      "id": "sc08",
+      "name": "#warez_lobby",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "Recurring chatroom. NetRanger94 (fed), various background lurkers, occasional notable visitors. Primary mechanic: ambient dialog pool, social engineering. Source of warez files that drop kombos."
+    },
+    {
+      "id": "sc09",
+      "name": "#cyber_lounge",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "GiGGLeBuTT69's home base. Larry energy peaks here. Primary mechanic: dialog tree where the protagonist either entertains GiGGLeBuTT (lo-fi flirting that lands jokes, not real) or shuts him down. Either path leads to him accidentally revealing critical info. The comedy is the wrapper for the plot beat."
+    },
+    {
+      "id": "sc10",
+      "name": "#phreak_kingdom",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "phractal's room. Old heads. Hostile to newcomers. Primary mechanic: prove you've read Phrack by answering trivia questions (the answers exist in textfiles you've leeched). Earn respect, get info."
+    },
+    {
+      "id": "sc11",
+      "name": "#h_p_v_a_c",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "Serious room. Hard to get into. Requires phractal's vouching. The protagonist meets a darker tier of operator here. Source of the password cracker tool unlock."
+    },
+    {
+      "id": "sc12",
+      "name": "#private_chan_7",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "Locked. Goal of Act 2. The Mentor invites the protagonist here at the act's end. Inside: the reveal scene. The Mentor is the daemon."
+    },
+    {
+      "id": "sc13",
+      "name": "ICQ window (overlay)",
+      "act": "Act 2: The Garden (10 beats, 6 locations)",
+      "description": "Recurring. Cr1M3L0RD, xXx_d4rkn3ss_xXx, k0nsole, others DM the protagonist throughout Act 2 onward. Primary mechanic: contact-by-contact dialog. ICQ \"uh-oh\" sound. The Cr1M3L0RD ICQ thread is particularly long and gives the player a piece of HOLLOWPOINT they don't realize is important until Act 3."
+    },
+    {
+      "id": "sc14",
+      "name": "Bedroom (return)",
+      "act": "Act 3: The Wires (8 beats, 7 locations)",
+      "description": "Act 3 opens with the protagonist back in their bedroom after the Mentor reveal. Tone is different. The room is the same. The interactions are different."
+    },
+    {
+      "id": "sc15",
+      "name": "Greyhound station payphone bank",
+      "act": "Act 3: The Wires (8 beats, 7 locations)",
+      "description": "First out-of-bedroom scene in the game. The protagonist takes a bus to a different area code to use a payphone. Red box mini-game (DTMF tone matching to get free calls). k0nsole calls them here payphone-to-payphone."
+    },
+    {
+      "id": "sc16",
+      "name": "k0nsole conversation",
+      "act": "Act 3: The Wires (8 beats, 7 locations)",
+      "description": "Conducted via two payphones. Primary mechanic: long dialog tree, no other distractions. k0nsole explains who they are, what happened to the Mentor, what HOLLOWPOINT is."
+    },
+    {
+      "id": "sc17",
+      "name": "Bell pedestal in suburban yard, 2am",
+      "act": "Act 3: The Wires (8 beats, 7 locations)",
+      "description": "Lockpicking mini-game (crank as tension wrench). If the player fails three times, a neighbor's porch light comes on and they have to retreat. Beige box tap mini-game (passive monitoring of a target line, listen to a fax transmission)."
+    },
+    {
+      "id": "sc18",
+      "name": "Telco switching office service entrance",
+      "act": "Act 3: The Wires (8 beats, 7 locations)",
+      "description": "Single scene. Blue box mini-game (the showpiece phreak mechanic). 2600 Hz tone hold, MF dial sequences, trunk seizure. The hardest mini-game in the game."
+    },
+    {
+      "id": "sc19",
+      "name": "Aegis network reconnaissance",
+      "act": "Act 3: The Wires (8 beats, 7 locations)",
+      "description": "Conducted from bedroom. Multi-step hack: war dial to find their modem pool, social engineer through their tech support line (SC20), password crack the dev VPN. Long sequence, multiple mini-games chained."
+    },
+    {
+      "id": "sc20",
+      "name": "Aegis tech support phone call",
+      "act": "Act 3: The Wires (8 beats, 7 locations)",
+      "description": "Phone NPC (Tech Support Agent). Social engineering dialog tree. The protagonist exploits her decency to extract credentials. This scene should sit uncomfortably with the player. That's intentional."
+    },
+    {
+      "id": "sc21",
+      "name": "Inside the Aegis dev network",
+      "act": "Act 4: The Game (6 beats, 4 locations)",
+      "description": "Three machines: source repo, deployment schedule, signing keys. Pivot between them. Hacking mini-games chained together."
+    },
+    {
+      "id": "sc22",
+      "name": "RedHook's chatroom",
+      "act": "Act 4: The Game (6 beats, 4 locations)",
+      "description": "The boss battle. Text-based confrontation. RedHook tries to trace the protagonist while talking. The protagonist has to recognize the stall and bail before the trace completes. Real-time pressure during the dialog."
+    },
+    {
+      "id": "sc23",
+      "name": "Release decision scene",
+      "act": "Act 4: The Game (6 beats, 4 locations)",
+      "description": "Where do you publish the proof? - **Phrack:** Slow burn. Right people see it. No mainstream pickup. - **Journalists (NYT, Wired, 2600):** Gets picked up. Gets botched. Aegis denies. Public mostly doesn't understand. - **Both:** Maximum impact. Maximum heat. Player's handle gets burned. Player choice. Epilogue branches on this."
+    },
+    {
+      "id": "sc24",
+      "name": "Exfiltration",
+      "act": "Act 4: The Game (6 beats, 4 locations)",
+      "description": "Cover tracks, erase logs, crank-driven entropy generation for the final encryption pass on the protagonist's own machine (callback to Act 1 mechanic). Burn the modem. Pull the hard drive. Bury it."
+    },
+    {
+      "id": "sc25",
+      "name": "2002. Older protagonist's apartment",
+      "act": "Coda",
+      "description": "Time skip. Cable modem now. New machine. They log into a BBS that shouldn't exist. They write a message to a teenager they've been watching. The message is the first one The Mentor sent them in Act 1, word for word. Loop closes."
+    },
+    {
+      "id": "sc26",
+      "name": "SecKC at Knuckleheads (post-credits coda)",
+      "act": "Coda",
+      "description": "Optional unlock after first completion. The older protagonist visits SecKC. Meets the Cory K. cameo. Gets handed a sticker. End on a warm room full of people laughing. ---"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "sc01",
+      "name": "Bedroom (recurring hub)",
+      "act": "Act 1: The Boards (8 beats, 5 locations)"
+    },
+    {
+      "id": "sc02",
+      "name": "DEADLINE BBS",
+      "act": "Act 1: The Boards (8 beats, 5 locations)"
+    },
+    {
+      "id": "sc03",
+      "name": "War dialer interface",
+      "act": "Act 1: The Boards (8 beats, 5 locations)"
+    },
+    {
+      "id": "sc04",
+      "name": "Corporate BBS (PhoenixDown)",
+      "act": "Act 1: The Boards (8 beats, 5 locations)"
+    },
+    {
+      "id": "sc05",
+      "name": "The phone bill cutscene",
+      "act": "Act 1: The Boards (8 beats, 5 locations)"
+    },
+    {
+      "id": "sc06",
+      "name": "AOL signup cutscene",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc07",
+      "name": "AOL Buddy List / Mail / Chat hub",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc08",
+      "name": "#warez_lobby",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc09",
+      "name": "#cyber_lounge",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc10",
+      "name": "#phreak_kingdom",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc11",
+      "name": "#h_p_v_a_c",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc12",
+      "name": "#private_chan_7",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc13",
+      "name": "ICQ window (overlay)",
+      "act": "Act 2: The Garden (10 beats, 6 locations)"
+    },
+    {
+      "id": "sc14",
+      "name": "Bedroom (return)",
+      "act": "Act 3: The Wires (8 beats, 7 locations)"
+    },
+    {
+      "id": "sc15",
+      "name": "Greyhound station payphone bank",
+      "act": "Act 3: The Wires (8 beats, 7 locations)"
+    },
+    {
+      "id": "sc16",
+      "name": "k0nsole conversation",
+      "act": "Act 3: The Wires (8 beats, 7 locations)"
+    },
+    {
+      "id": "sc17",
+      "name": "Bell pedestal in suburban yard, 2am",
+      "act": "Act 3: The Wires (8 beats, 7 locations)"
+    },
+    {
+      "id": "sc18",
+      "name": "Telco switching office service entrance",
+      "act": "Act 3: The Wires (8 beats, 7 locations)"
+    },
+    {
+      "id": "sc19",
+      "name": "Aegis network reconnaissance",
+      "act": "Act 3: The Wires (8 beats, 7 locations)"
+    },
+    {
+      "id": "sc20",
+      "name": "Aegis tech support phone call",
+      "act": "Act 3: The Wires (8 beats, 7 locations)"
+    },
+    {
+      "id": "sc21",
+      "name": "Inside the Aegis dev network",
+      "act": "Act 4: The Game (6 beats, 4 locations)"
+    },
+    {
+      "id": "sc22",
+      "name": "RedHook's chatroom",
+      "act": "Act 4: The Game (6 beats, 4 locations)"
+    },
+    {
+      "id": "sc23",
+      "name": "Release decision scene",
+      "act": "Act 4: The Game (6 beats, 4 locations)"
+    },
+    {
+      "id": "sc24",
+      "name": "Exfiltration",
+      "act": "Act 4: The Game (6 beats, 4 locations)"
+    },
+    {
+      "id": "sc25",
+      "name": "2002. Older protagonist's apartment",
+      "act": "Coda"
+    },
+    {
+      "id": "sc26",
+      "name": "SecKC at Knuckleheads (post-credits coda)",
+      "act": "Coda"
+    }
+  ],
+  "interactables": [
+    {
+      "id": "computer"
+    },
+    {
+      "id": "modem"
+    },
+    {
+      "id": "phone"
+    },
+    {
+      "id": "bed"
+    },
+    {
+      "id": "desk"
+    },
+    {
+      "id": "payphone"
+    },
+    {
+      "id": "red_box"
+    },
+    {
+      "id": "lockpick"
+    },
+    {
+      "id": "beige_box"
+    },
+    {
+      "id": "blue_box"
+    }
+  ],
+  "items": [
+    {
+      "id": "modem",
+      "name": "Modem:",
+      "description": "Always have it."
+    },
+    {
+      "id": "saved_textfiles",
+      "name": "Saved textfiles:",
+      "description": "Each teaches one kombo."
+    },
+    {
+      "id": "aol_cd_rom",
+      "name": "AOL CD-ROM:",
+      "description": "Installs AOL."
+    },
+    {
+      "id": "nfo_printout_from_razor1911",
+      "name": "NFO printout from Razor1911:",
+      "description": "Decorative + lore."
+    },
+    {
+      "id": "a_red_box",
+      "name": "A red box:",
+      "description": "Hand-built. Used in Act 3."
+    },
+    {
+      "id": "k0nsole_s_phone_number",
+      "name": "k0nsole's phone number:",
+      "description": "Critical for SC15."
+    },
+    {
+      "id": "a_bell_system_service_id_badge",
+      "name": "A Bell System service ID badge:",
+      "description": "Used in SC18 to walk past the switching office security pretending to be a contractor."
+    },
+    {
+      "id": "the_mentor_s_encrypted_cache",
+      "name": "The Mentor's encrypted cache:",
+      "description": "Unlocked by combining three keys gathered through the game."
+    },
+    {
+      "id": "a_photo_of_the_mentor_s_wife",
+      "name": "A photo of the Mentor's wife:",
+      "description": "Found object, no gameplay use, emotional beat."
+    },
+    {
+      "id": "phrack_issue_49",
+      "name": "Phrack Issue 49:",
+      "description": "Multiple Phrack issues are findable. Each unlocks one entry in the NFO STASH."
+    }
+  ],
+  "tool_progression": [
+    {
+      "act_num": 1,
+      "tools": [
+        "Terminal",
+        "War Dialer",
+        "basic phreak"
+      ]
+    },
+    {
+      "act_num": 2,
+      "tools": [
+        "AOL client",
+        "ICQ",
+        "Social Engineering dialog system",
+        "Password Cracker"
+      ]
+    },
+    {
+      "act_num": 3,
+      "tools": [
+        "Blue Box",
+        "Beige Box",
+        "Lockpicking",
+        "entropy pool for key gen"
+      ]
+    },
+    {
+      "act_num": 4,
+      "tools": [
+        "Full toolkit + one custom tool The Mentor left for you specifically",
+        "unlocked by combining three earlier finds"
+      ]
+    }
+  ],
+  "skill_gates": [
+    {
+      "beat": "Act 1 b3: Corporate BBS file leech",
+      "required_tool": "War Dialer",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 1 b6: Encrypted file from Mentor",
+      "required_tool": "Password Cracker",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 1 b8: Bypass mom's \"off the phone\" demand",
+      "required_tool": "Social Engineering (mom is the first SE target, comedically)",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 2 b1: Install AOL",
+      "required_tool": "none (cutscene)",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 2 b5: Get phractal to vouch",
+      "required_tool": "Read 3 specific textfiles",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 2 b8: Enter #private_chan_7",
+      "required_tool": "Password Cracker",
+      "optional_tools": [
+        "Social Engineering (alternate path)"
+      ]
+    },
+    {
+      "beat": "Act 3 b1: Call k0nsole from payphone",
+      "required_tool": "Red Box",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 3 b3: Beige box tap on Bell pedestal",
+      "required_tool": "Lockpick + Beige Box",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 3 b5: Switching office",
+      "required_tool": "Blue Box",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 3 b7: Aegis tech support",
+      "required_tool": "Social Engineering",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 3 b8: Aegis dev VPN",
+      "required_tool": "Password Cracker (advanced)",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 4 b3: RedHook confrontation",
+      "required_tool": "Social Engineering (last-ditch)",
+      "optional_tools": []
+    },
+    {
+      "beat": "Act 4 b5: Encrypt and bury evidence",
+      "required_tool": "War Dialer (entropy mode)",
+      "optional_tools": []
+    }
+  ],
+  "required_animations": [
+    {
+      "id": "newb_idle_south",
+      "character": "newb"
+    },
+    {
+      "id": "newb_walk_south",
+      "character": "newb"
+    },
+    {
+      "id": "newb_idle_north",
+      "character": "newb"
+    },
+    {
+      "id": "newb_walk_north",
+      "character": "newb"
+    },
+    {
+      "id": "newb_idle_east",
+      "character": "newb"
+    },
+    {
+      "id": "newb_walk_east",
+      "character": "newb"
+    },
+    {
+      "id": "newb_idle_west",
+      "character": "newb"
+    },
+    {
+      "id": "newb_walk_west",
+      "character": "newb"
+    },
+    {
+      "id": "newb_interact",
+      "character": "newb"
+    },
+    {
+      "id": "newb_surprised",
+      "character": "newb"
+    },
+    {
+      "id": "terminal_typewriter",
+      "character": "system"
+    },
+    {
+      "id": "lockpick_pin_set",
+      "character": "system"
+    },
+    {
+      "id": "tyson_cabinet_attract",
+      "character": "system"
+    },
+    {
+      "id": "coin_vault_zoom",
+      "character": "system"
+    },
+    {
+      "id": "crt_collapse",
+      "character": "system"
+    }
+  ],
+  "ui_requirements": [
+    "Crank as primary input (lockpick, dial, charge, scroll)",
+    "D-pad walking + facing in walkable rooms (Bedroom, Playground)",
+    "A = confirm / interact, B = back / cancel",
+    "System menu items: \"pwnglove mode\" + \"back to story\"",
+    "Dialog overlay with newb portrait + typewriter text",
+    "BBS terminal: monospace black-on-white scrolling",
+    "AOL chrome (Act 2): dominant in #warez_lobby / #cyber_lounge / #phreak_kingdom / #h_p_v_a_c / #private_chan_7",
+    "ICQ overlay popups with \"uh-oh\" SFX",
+    "Coin Vault: 4x6 grid + sidebar with closeup",
+    "Tyson cabinet: digit-entry UI for 007-373-5963",
+    "Lockpick UI matching docs/lockpickmini.png (Lucas Pope density)"
+  ],
+  "win_condition": "Publish proof of Project HOLLOWPOINT before Aegis activates the BGP backdoor (mid-1999).",
+  "fail_conditions": [
+    "Run out of in-game weeks before Aegis activation",
+    "RedHook completes the trace during Act 4 confrontation",
+    "Mom catches you with a phone bill over $50 and you cannot pay her back (Act 1 finale)",
+    "Fail lockpick + Bell pedestal three times (neighbor lights, retreat)"
+  ],
+  "recurring_motifs": [
+    "ICQ uh-oh sound",
+    "AOL chrome",
+    "Mentor voice / DEADLINE BBS",
+    "Crank as primary input device",
+    "PWNGLOVE multi-tool",
+    "23 C0iNS collection"
+  ],
+  "pwnglove_yaml_block": "mechanic_kit: pwnglove_multitool\nacquired_in_act: 2   # initial - Konami layer only; other layers progressively unlock\nacquired_via: SecKC hacker show-off contest (real-world reference)\npriority: TOP   # see docs/phase5_pwnglove_*.md\npower_source: crank   # see docs/phase5_pwnglove_crank_power_channel.md",
+  "coins_raw_section": "```yaml mechanic_kit: coin_grid_minter acquired_in_act: 1 acquired_via: First BBS login (Coin 0 is free, auto-minted) priority: TOP # see docs/phase5_pwnglove_coins_priority.md ``` **real_world_source:** Based on the real 23 C0iNS system at `NoDataFound/23Coins` (software / protocol) and `NoDataFound/TriKC0x01` (hardware coin). Total of 24 coins (0..23). Each coin has a hidden \"Phrase that pays\" — discovering and delivering the phrase mints the coin. **Canonical rule (from the real repo README):** \"Solving the ENTIRE coin will earn you the next coin regardless if you solve.\" Coin 0 is the welcome coin, minted automatically on first BBS login; the physical version is 3D-printable at `https://www.thingiverse.com/thing:5229745`. **ingame_function:** - 24-coin grid (numbered 0..23, matches the"
+}
