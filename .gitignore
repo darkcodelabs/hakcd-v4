@@ -52,3 +52,4 @@ source/libraries/noble/docs/
 # gitignored to keep clone size sane. Only the 5 encoded loops under
 # source/sounds/music/*_loop.wav ship.
 assets/sounds/music_masters/
+build/
