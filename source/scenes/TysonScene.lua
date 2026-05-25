@@ -82,9 +82,14 @@ function scene:enter()
     self._exit_at_ms = 0
     self._noise_tick = 0
 
-    -- already_granted check
-    local flags = get_flags()
-    if flags.tyson_unlock then
+    -- already_granted check (Progression preferred, get_flags legacy fallback)
+    local granted = false
+    if _G.Progression and _G.Progression.tyson_unlocked then
+        granted = _G.Progression.tyson_unlocked()
+    else
+        granted = get_flags().tyson_unlock == true
+    end
+    if granted then
         self.state = 'already_granted'
         self.overlay_until_ms = playdate.getCurrentTimeMilliseconds() + 2500
         self._exit_at_ms = self.overlay_until_ms
@@ -144,7 +149,11 @@ function scene:_commit_digit()
         if entered == self.target then
             self.state = 'unlocked'
             self.overlay_until_ms = playdate.getCurrentTimeMilliseconds() + 3000
-            set_flag('tyson_unlock', true)
+            if _G.Progression and _G.Progression.set_tyson_unlocked then
+                _G.Progression.set_tyson_unlocked(true)
+            else
+                set_flag('tyson_unlock', true)   -- legacy fallback
+            end
             sfx('tyson_winner')
         else
             self.state = 'failed'

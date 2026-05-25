@@ -7,6 +7,7 @@ import 'libraries/animatedsprite/AnimatedSprite'
 import 'libraries/gfxp/gfxp'
 
 import 'utilities/Utilities'
+import 'utilities/Progression'
 
 -- Agent 5 (CONTENT): wires sound_manifest global. Scenes call
 -- sound_manifest.play_sfx(name) / sound_manifest.music_for(scene_name).
@@ -25,6 +26,10 @@ import 'scenes/ModemScene'
 import 'scenes/PhoneScene'
 
 Noble.showFPS = false
+
+-- Seed progression scaffold (idempotent — pulls coin defaults from
+-- coins.json on first run, leaves existing state alone after).
+if Progression and Progression.init then Progression.init() end
 
 -- Boot scene is the canonical title (Agent 4 / PORT). SpriteTestScene is
 -- still importable so devs can wire it in manually for ad-hoc testing.

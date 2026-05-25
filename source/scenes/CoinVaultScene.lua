@@ -114,8 +114,11 @@ end
 function scene:_coin_at(cursor) return cursor - 1 end
 
 function scene:_coin_status(id)
-    -- v0.0.3 referenced progression.coin_status here. v4 doesn't have
-    -- progression wired yet, so use the JSON's status_default field.
+    -- v4 progression wraps Noble.GameData; falls back to coins.json
+    -- status_default when state hasn't been seeded yet (e.g. test scene).
+    if _G.Progression and _G.Progression.coin_status then
+        return _G.Progression.coin_status(id)
+    end
     local c = self._coin_by_id[id]
     if c and c.status_default then return c.status_default end
     if id == 0 then return 'minted' end
@@ -124,6 +127,9 @@ function scene:_coin_status(id)
 end
 
 function scene:_minted_count()
+    if _G.Progression and _G.Progression.minted_count then
+        return _G.Progression.minted_count()
+    end
     local n = 0
     for i = 0, TOTAL_COINS - 1 do
         if self:_coin_status(i) == 'minted' then n = n + 1 end
