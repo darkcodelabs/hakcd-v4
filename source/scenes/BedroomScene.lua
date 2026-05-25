@@ -156,14 +156,11 @@ function BedroomScene:update()
         if id == 'bed' then
             Noble.transition(PlaygroundScene)
         elseif id == 'computer' then
-            self._dialog_text = 'computer: SignalNet boots... [placeholder]'
-            self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2500
+            Noble.transition(ComputerScene)
         elseif id == 'modem' then
-            self._dialog_text = 'modem: 2400 baud ready. [placeholder]'
-            self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2500
+            Noble.transition(ModemScene)
         elseif id == 'phone' then
-            self._dialog_text = 'phone: line dead. [placeholder]'
-            self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2500
+            Noble.transition(PhoneScene)
         else
             self._dialog_text = '[placeholder] ' .. tostring(id)
             self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2200

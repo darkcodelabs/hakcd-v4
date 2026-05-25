@@ -20,6 +20,9 @@ import 'scenes/PlaygroundScene'
 import 'scenes/LockpickScene'
 import 'scenes/TysonScene'
 import 'scenes/CoinVaultScene'
+import 'scenes/ComputerScene'
+import 'scenes/ModemScene'
+import 'scenes/PhoneScene'
 
 Noble.showFPS = false
 
