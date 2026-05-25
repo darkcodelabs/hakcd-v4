@@ -43,8 +43,14 @@ function Newb:init(x, y)
     self.facing = 'south'
 end
 
+-- Footstep cadence: at SPEED=2 and ~30Hz Playdate update, one step ≈
+-- every 14 frames feels natural. Track frames-since-last-step so we
+-- don't spam SFX every update.
+local STEP_FRAMES <const> = 14
+
 -- Called once per frame from the scene update.  Reads the d-pad, picks a
--- facing, switches state, and applies movement.
+-- facing, switches state, and applies movement. Emits 'step' SFX at
+-- STEP_FRAMES cadence while walking.
 function Newb:updateMovement()
     local pd = playdate
     local dx, dy = 0, 0
@@ -66,7 +72,17 @@ function Newb:updateMovement()
         end
         self:changeState('walk_' .. self.facing)
         self:moveBy(dx, dy)
+
+        -- footstep emission
+        self._stepFrames = (self._stepFrames or STEP_FRAMES) + 1
+        if self._stepFrames >= STEP_FRAMES then
+            self._stepFrames = 0
+            if _G.sound_manifest and _G.sound_manifest.play_sfx then
+                _G.sound_manifest.play_sfx('step')
+            end
+        end
     else
         self:changeState('idle_' .. self.facing)
+        self._stepFrames = STEP_FRAMES   -- reset so first step on resume fires immediately
     end
 end

@@ -42,6 +42,10 @@ M.sfx_paths = {
     coin_zoom_whoosh      = 'sounds/sfx/coin_zoom_whoosh',
     coin_mint             = 'sounds/sfx/coin_mint',
     pwnglove_boot         = 'sounds/sfx/pwnglove_boot',
+    step                  = {
+        'sounds/sfx/step_1',
+        'sounds/sfx/step_2',
+    },
 }
 
 -- Play a one-shot SFX by manifest name. No-ops if the name is unknown so
