@@ -4,14 +4,15 @@
 --   * 11 slots (9 digits + dashes at positions 4 and 8)
 --   * Crank rotates current digit 0..9 (36 deg per step)
 --   * A commits + advances cursor, auto-skipping dashes
---   * Full match -> set flags.tyson_unlock = true and overlay 3s before exit
+--   * Full match -> Progression.set_flag(canon.state_flags.tyson_unlock.id,true) + overlay 3s before exit
 --   * B abandons
 --
 -- Visual upgrade vs v0.0.3:
 --   * Black background with GFXP gray-50 accent on digit slot fills
 --   * "TYSON MODE" win banner renders with GFXP random-noise overlay flicker
 --
--- Save: writes Noble.GameData["flags"].tyson_unlock = true (per Bootstrap Gate 1)
+-- Save: routes through Progression.set_flag(canon.state_flags.tyson_unlock.id, true)
+-- (Phase 12 v0.1.24 — no direct Noble.GameData access; no bare flag strings).
 -- SFX (Agent 5 / CONTENT, may not exist yet):
 --   tyson_digit_select, tyson_digit_commit, tyson_winner
 
@@ -29,26 +30,6 @@ local SCREEN_W, SCREEN_H = 400, 240
 local function sfx(name)
     if _G.sound_manifest and _G.sound_manifest.play_sfx then
         _G.sound_manifest.play_sfx(name)
-    end
-end
-
--- Safe accessor for Noble.GameData["flags"] table — auto-create if missing.
-local function get_flags()
-    local ok, flags
-    if Noble and Noble.GameData and Noble.GameData.get then
-        ok, flags = pcall(Noble.GameData.get, 'flags')
-    end
-    if not ok or type(flags) ~= 'table' then
-        flags = {}
-    end
-    return flags
-end
-
-local function set_flag(name, value)
-    local flags = get_flags()
-    flags[name] = value
-    if Noble and Noble.GameData and Noble.GameData.set then
-        pcall(Noble.GameData.set, 'flags', flags)
     end
 end
 
@@ -82,13 +63,10 @@ function scene:enter()
     self._exit_at_ms = 0
     self._noise_tick = 0
 
-    -- already_granted check (Progression preferred, get_flags legacy fallback)
-    local granted = false
-    if _G.Progression and _G.Progression.tyson_unlocked then
-        granted = _G.Progression.tyson_unlocked()
-    else
-        granted = get_flags().tyson_unlock == true
-    end
+    -- already_granted check — canon-guarded read via Progression.get_flag.
+    -- canon.state_flags.tyson_unlock.id is the only legal indirection here;
+    -- never reference the bare flag id as a literal string in scene code.
+    local granted = Progression.get_flag(canon.state_flags.tyson_unlock.id) == true
     if granted then
         self.state = 'already_granted'
         self.overlay_until_ms = playdate.getCurrentTimeMilliseconds() + 2500
@@ -149,11 +127,10 @@ function scene:_commit_digit()
         if entered == self.target then
             self.state = 'unlocked'
             self.overlay_until_ms = playdate.getCurrentTimeMilliseconds() + 3000
-            if _G.Progression and _G.Progression.set_tyson_unlocked then
-                _G.Progression.set_tyson_unlocked(true)
-            else
-                set_flag('tyson_unlock', true)   -- legacy fallback
-            end
+            -- Canon-guarded write — Progression.set_flag HARD-asserts that
+            -- canon.state_flags.tyson_unlock.id is in canon.state_flags, so a
+            -- canon-drift typo here crashes loud on sideload (Phase 8 guard).
+            Progression.set_flag(canon.state_flags.tyson_unlock.id, true)
             sfx('tyson_winner')
         else
             self.state = 'failed'
