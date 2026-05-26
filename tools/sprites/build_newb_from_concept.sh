@@ -36,28 +36,29 @@ for i in 08 09 10 11; do
   convert "$work/n$i.png" -flop "$work/n${i}_flop.png"
 done
 
-# Frame layout (AnimatedSprite spec):
-#   1-2   idle_south  (cell 04 dup for breathing fallback)
-#   3-6   walk_south  (cells 04 05 06 07)
-#   7     idle_north  (cell 00)
-#   8-11  walk_north  (cells 00 01 02 03)
-#   12    blank
-#   13    idle_east   (cell 08)
-#   14-17 walk_east   (cells 08 09 10 11)
-#   18    blank
-#   19    idle_west   (cell 08 flopped)
-#   20-23 walk_west   (cells 08-11 flopped)
-#   24    blank
-#   25    interact    (cell 05 — south w/ leg extension)
-#   26    surprised   (cell 12 — first head close-up)
+# Frame layout (AnimatedSprite spec) v0.1.11 — breathing for all directions:
+#   1     idle_south_a  (cell 04)
+#   2     idle_south_b  (cell 05 — breathing variant, slight pose shift)
+#   3-6   walk_south    (cells 04 05 06 07)
+#   7     idle_north_a  (cell 00)
+#   8-11  walk_north    (cells 00 01 02 03)
+#   12    idle_north_b  (cell 01 — breathing variant)
+#   13    idle_east_a   (cell 08)
+#   14-17 walk_east     (cells 08 09 10 11)
+#   18    idle_east_b   (cell 09 — breathing variant)
+#   19    idle_west_a   (cell 08 flopped)
+#   20-23 walk_west     (cells 08-11 flopped)
+#   24    idle_west_b   (cell 09 flopped — breathing variant)
+#   25    interact      (cell 05 — south w/ leg extension)
+#   26    surprised     (cell 12 — first head close-up)
 #   27-28 blank
 montage \
-  "$work/n04.png" "$work/n04.png" "$work/n04.png" "$work/n05.png" \
+  "$work/n04.png" "$work/n05.png" "$work/n04.png" "$work/n05.png" \
   "$work/n06.png" "$work/n07.png" "$work/n00.png" "$work/n00.png" \
-  "$work/n01.png" "$work/n02.png" "$work/n03.png" "$work/blank.png" \
+  "$work/n01.png" "$work/n02.png" "$work/n03.png" "$work/n01.png" \
   "$work/n08.png" "$work/n08.png" "$work/n09.png" "$work/n10.png" \
-  "$work/n11.png" "$work/blank.png" "$work/n08_flop.png" "$work/n08_flop.png" \
-  "$work/n09_flop.png" "$work/n10_flop.png" "$work/n11_flop.png" "$work/blank.png" \
+  "$work/n11.png" "$work/n09.png" "$work/n08_flop.png" "$work/n08_flop.png" \
+  "$work/n09_flop.png" "$work/n10_flop.png" "$work/n11_flop.png" "$work/n09_flop.png" \
   "$work/n05.png" "$work/n12.png" "$work/blank.png" "$work/blank.png" \
   -tile 4x7 -geometry 32x32+0+0 -background white "$work/_montage.png"
 

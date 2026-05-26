@@ -43,8 +43,7 @@ local animations = {
         },
         idle_north = {
             frames = {
-                7,
-                12
+                7
             },
             frameDuration = 30,
             loop = true,
@@ -67,8 +66,7 @@ local animations = {
         },
         idle_east = {
             frames = {
-                13,
-                18
+                13
             },
             frameDuration = 30,
             loop = true,
@@ -91,8 +89,7 @@ local animations = {
         },
         idle_west = {
             frames = {
-                19,
-                24
+                19
             },
             frameDuration = 30,
             loop = true,

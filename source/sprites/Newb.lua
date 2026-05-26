@@ -23,13 +23,18 @@ function Newb:init(x, y)
     Newb.super.init(self, imagetable)
 
     -- Frame ranges match the documented 4x7 imagetable layout.
+    -- Breathing on all 4 directions (v0.1.11). Idle states have 2 frames
+    -- each at tickStep 30 (~half-second per frame at 30fps = subtle 1Hz
+    -- breath cycle). North/East/West breathing variants live in what used
+    -- to be blank slots 12 / 18 / 24, so the FSM addState range is the
+    -- primary cell + the variant cell.
     self:addState('idle_south',  1,  2,  { tickStep = 30 })
     self:addState('walk_south',  3,  6,  { tickStep = 6 })
-    self:addState('idle_north',  7,  7)
+    self:addState('idle_north',  7,  7,  { tickStep = 30, frames = { 7, 12 } })
     self:addState('walk_north',  8, 11,  { tickStep = 6 })
-    self:addState('idle_east',  13, 13)
+    self:addState('idle_east',  13, 13,  { tickStep = 30, frames = { 13, 18 } })
     self:addState('walk_east',  14, 17,  { tickStep = 6 })
-    self:addState('idle_west',  19, 19)
+    self:addState('idle_west',  19, 19,  { tickStep = 30, frames = { 19, 24 } })
     self:addState('walk_west',  20, 23,  { tickStep = 6 })
     self:addState('interact',   25, 25)
     self:addState('surprised',  26, 26)

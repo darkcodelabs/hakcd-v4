@@ -47,10 +47,12 @@ animations.newb = {
         bible_anim_id: 'newb_walk_south'
     },
     idle_north: {
-        // v0.1.11 staged frames {7, 12} via opts.frames; manifest declares
-        // intended layout (not-yet-shipped breathing variant) so Phase 9
-        // sprite loader can adopt it.
-        frames:        [7, 12],
+        // Shipped sprite uses single-frame hold; breathing variant slot 12
+        // exists as blank in the imagetable but is intentionally not yet
+        // wired. Frame budget reservation note: future hand-pixel update
+        // may use slot 12 for a 1-pixel-down breathing pose; manifest
+        // should be re-extended at that point.
+        frames:        [7],
         frameDuration: 30,
         loop:          true,
         fallback:      null,
@@ -66,7 +68,7 @@ animations.newb = {
         bible_anim_id: 'newb_walk_north'
     },
     idle_east: {
-        frames:        [13, 18],
+        frames:        [13],
         frameDuration: 30,
         loop:          true,
         fallback:      null,
@@ -82,7 +84,7 @@ animations.newb = {
         bible_anim_id: 'newb_walk_east'
     },
     idle_west: {
-        frames:        [19, 24],
+        frames:        [19],
         frameDuration: 30,
         loop:          true,
         fallback:      null,
