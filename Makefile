@@ -22,12 +22,17 @@ ASSETS := $(shell find $(SRC_DIR) -name '*.png' -type f -not -path '$(SRC_DIR)/l
 # One sentinel marker per validated asset
 VALIDATED := $(ASSETS:%=build/.validated/%.ok)
 
-.PHONY: all validate silhouettes clean
+# Canon graph validator (Phase 7) — single sentinel re-triggered by any
+# change under source/data/*.lua. Cheap to run, blocks pdc on drift.
+CANON_DATA := $(wildcard $(SRC_DIR)/data/*.lua)
+CANON_SENTINEL := build/.validated/.canon-validated.ok
+
+.PHONY: all validate validate-canon silhouettes clean
 
 all: $(PDX)
 
-# Build target — depends on every asset passing validation first
-$(PDX): $(VALIDATED)
+# Build target — depends on every asset passing validation AND canon graph passing first
+$(PDX): $(VALIDATED) validate-canon
 	@rm -rf $(PDX)
 	@mkdir -p build
 	$(PDC) $(SRC_DIR) $(PDX)
@@ -39,8 +44,15 @@ build/.validated/%.ok: %
 	@./tools/asset_validator.sh $< && touch $@
 
 # Validate without building
-validate: $(VALIDATED)
+validate: $(VALIDATED) validate-canon
 	@echo "All $(words $(ASSETS)) PNGs valid."
+
+# Canon graph validation (Phase 7) — fails build on continuity / id-graph drift.
+validate-canon: $(CANON_SENTINEL)
+
+$(CANON_SENTINEL): $(CANON_DATA) tools/canon/validate_continuity.sh
+	@mkdir -p $(dir $@)
+	@./tools/canon/validate_continuity.sh && touch $@
 
 # Force-regenerate silhouettes (for manual review pass)
 silhouettes:
