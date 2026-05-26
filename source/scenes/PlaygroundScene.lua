@@ -14,12 +14,44 @@ PlaygroundScene.backgroundColor = playdate.graphics.kColorWhite
 
 local LEVEL_NAME = 'Playground'
 
+-- Phase 14 perf fix #3: same module-scoped tilemap + entity cache as
+-- BedroomScene. See BedroomScene.lua for the rationale — Noble
+-- instantiates a fresh scene per transition, so init() runs per-entry;
+-- module scope is the only place these heavy builds can be paid once.
+local _level_built       = false
+local _cached_layer_meta = nil
+local _cached_entities   = nil
+
+local function _build_level_caches()
+    if _level_built then return end
+    local layers = LDtk.get_layers(LEVEL_NAME) or {}
+    _cached_layer_meta = {}
+    for layerName, layer in pairs(layers) do
+        if layer.tiles then
+            local tm = LDtk.create_tilemap(LEVEL_NAME, layerName)
+            if tm then
+                local empty = LDtk.get_empty_tileIDs(LEVEL_NAME, 'Solid', layerName)
+                local z = (layerName == 'Foreground') and 10 or 0
+                table.insert(_cached_layer_meta, {
+                    name      = layerName,
+                    tilemap   = tm,
+                    empty_ids = empty,
+                    z         = z,
+                })
+            end
+        end
+    end
+    _cached_entities = LDtk.get_entities(LEVEL_NAME)
+    _level_built = true
+end
+
 function PlaygroundScene:init()
     PlaygroundScene.super.init(self)
     if not _G._hakcd_ldtk_loaded then
         LDtk.load('levels/world.ldtk')
         _G._hakcd_ldtk_loaded = true
     end
+    _build_level_caches()
 end
 
 function PlaygroundScene:enter(previousScene)
@@ -31,27 +63,19 @@ function PlaygroundScene:enter(previousScene)
 
     local gfx = playdate.graphics
 
-    local layers = LDtk.get_layers(LEVEL_NAME) or {}
-    for layerName, layer in pairs(layers) do
-        if layer.tiles then
-            local tm = LDtk.create_tilemap(LEVEL_NAME, layerName)
-            if tm then
-                local layerSprite = gfx.sprite.new()
-                layerSprite:setTilemap(tm)
-                layerSprite:setCenter(0, 0)
-                layerSprite:moveTo(0, 0)
-                local z = (layerName == 'Foreground') and 10 or 0
-                layerSprite:setZIndex(z)
-                layerSprite:add()
-                local empty = LDtk.get_empty_tileIDs(LEVEL_NAME, 'Solid', layerName)
-                if empty then
-                    gfx.sprite.addWallSprites(tm, empty)
-                end
-                if layerName == 'Background' then self.bgSprite = layerSprite end
-                if layerName == 'Foreground' then self.fgSprite = layerSprite end
-                self.tilemap = self.tilemap or tm
-            end
+    for _, meta in ipairs(_cached_layer_meta) do
+        local layerSprite = gfx.sprite.new()
+        layerSprite:setTilemap(meta.tilemap)
+        layerSprite:setCenter(0, 0)
+        layerSprite:moveTo(0, 0)
+        layerSprite:setZIndex(meta.z)
+        layerSprite:add()
+        if meta.empty_ids then
+            gfx.sprite.addWallSprites(meta.tilemap, meta.empty_ids)
         end
+        if meta.name == 'Background' then self.bgSprite = layerSprite end
+        if meta.name == 'Foreground' then self.fgSprite = layerSprite end
+        self.tilemap = self.tilemap or meta.tilemap
     end
 
     -- Default spawn comes from rooms.playground.spawn_points[1] (rooms.lua
@@ -61,7 +85,7 @@ function PlaygroundScene:enter(previousScene)
     local pg_spawn = pg and pg.spawn_points and pg.spawn_points[1]
     local spawnX = (pg_spawn and pg_spawn.x) or 200
     local spawnY = (pg_spawn and pg_spawn.y) or 168
-    local all = LDtk.get_entities(LEVEL_NAME)
+    local all = _cached_entities
     if all then
         for _, ent in ipairs(all) do
             if ent.name == 'player_spawn' then
@@ -98,7 +122,7 @@ function PlaygroundScene:enter(previousScene)
     end
 
     self.hotspots = {}
-    local hsList = LDtk.get_entities(LEVEL_NAME, 'Hotspots') or {}
+    local hsList = _cached_entities or {}
     for _, ent in ipairs(hsList) do
         if ent.name == 'Hotspot' then
             local hs = gfx.sprite.new()
@@ -126,11 +150,22 @@ function PlaygroundScene:update()
         self.newb:updateMovement()
     end
 
+    -- Phase 14 perf fix #5: manual rect-intersect against cached self.hotspots
+    -- instead of self.newb:overlappingSprites() (per-frame Lua table alloc).
+    -- See BedroomScene for full notes.
     local active = nil
-    if self.newb then
-        local overlapping = self.newb:overlappingSprites()
-        for _, s in ipairs(overlapping) do
-            if s.hotspot_id then active = s; break end
+    if self.newb and self.hotspots then
+        local nx, ny = self.newb.x, self.newb.y
+        local nw, nh = self.newb.width or 32, self.newb.height or 32
+        local nl, nt = nx - nw / 2, ny - nh / 2
+        local nr, nb = nl + nw, nt + nh
+        for i = 1, #self.hotspots do
+            local hs = self.hotspots[i]
+            local hl, ht = hs.x, hs.y
+            local hr, hb = hl + (hs.width or 24), ht + (hs.height or 24)
+            if nl < hr and nr > hl and nt < hb and nb > ht then
+                if hs.hotspot_id then active = hs; break end
+            end
         end
     end
     self.activeHotspot = active

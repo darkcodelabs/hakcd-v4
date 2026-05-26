@@ -66,10 +66,57 @@ end
 -- ============================================================
 -- LIFECYCLE
 -- ============================================================
+-- Phase 14 perf fix #2: cache parsed coins.json + image loads at MODULE
+-- scope so re-entering CoinVaultScene from PlaygroundScene is cheap.
+-- Noble's transition machinery instantiates a fresh scene every entry
+-- (`queuedScene = NewScene(...)` in Noble.lua), so `init()` is NOT a
+-- one-time hook — it runs per-entry. Memoizing at module scope is the
+-- only place these heavy loads can actually be paid only once.
+local _shared_assets_loaded = false
+local _shared_coin_by_id    = nil
+local _shared_locked_img    = nil
+local _shared_coin_imgs     = nil
+local _shared_coin_imgs_lg  = nil
+local _shared_newb_img      = nil
+
+-- Module-scope cached grid bake. Last-known-coin-status fingerprint lets
+-- us know whether to re-bake or reuse the cached image across enters.
+local _shared_grid_baked    = nil
+local _shared_grid_status   = nil  -- comma-joined status string used as cache key
+
+local function _load_shared_assets()
+    if _shared_assets_loaded then return end
+    local data = load_coins_json()
+    _shared_coin_by_id = {}
+    if data and data.coins then
+        for _, c in ipairs(data.coins) do
+            _shared_coin_by_id[c.id] = c
+        end
+    end
+    _shared_locked_img   = gfx.image.new("images/coins/coin_locked")
+    _shared_coin_imgs    = {}
+    _shared_coin_imgs_lg = {}
+    for i = 0, 3 do
+        _shared_coin_imgs[i]    = gfx.image.new("images/coins/coin_" .. i)
+        _shared_coin_imgs_lg[i] = gfx.image.new("images/coins/coin_" .. i .. "_large")
+    end
+    _shared_newb_img    = gfx.image.new("images/portraits/newb")
+    _shared_assets_loaded = true
+end
+
 function scene:init(__sceneProperties)
     scene.super.init(self)
     __sceneProperties = __sceneProperties or {}
     self._return_scene = __sceneProperties.return_scene
+
+    -- Load shared assets ONCE across all scene instances; subsequent
+    -- inits are O(1) bind-to-self.
+    _load_shared_assets()
+    self._coin_by_id     = _shared_coin_by_id
+    self.locked_img      = _shared_locked_img
+    self.coin_imgs       = _shared_coin_imgs
+    self.coin_imgs_large = _shared_coin_imgs_lg
+    self._newb_img       = _shared_newb_img
 end
 
 function scene:enter()
@@ -79,25 +126,14 @@ function scene:enter()
         _G.sound_manifest.start_scene_music('CoinVaultScene')
     end
 
-    local data = load_coins_json()
-    self._coin_by_id = {}
-    if data and data.coins then
-        for _, c in ipairs(data.coins) do
-            self._coin_by_id[c.id] = c
-        end
-    end
-
     self.cursor = 1            -- 1..24
     self.zoomed = false
 
-    self.locked_img = gfx.image.new("images/coins/coin_locked")
-    self.coin_imgs = {}
-    self.coin_imgs_large = {}
-    for i = 0, 3 do
-        self.coin_imgs[i]       = gfx.image.new("images/coins/coin_" .. i)
-        self.coin_imgs_large[i] = gfx.image.new("images/coins/coin_" .. i .. "_large")
-    end
-    self._newb_img = gfx.image.new("images/portraits/newb")
+    -- Phase 14 perf fix #1: bake the 4x6 grid into a single offscreen image
+    -- so drawBackground() blits 1 image instead of running 96 draw calls
+    -- per frame (4 calls per cell x 24 cells). Cache the bake at module
+    -- scope and reuse across enters if coin statuses haven't changed.
+    self:_rebake_grid_if_dirty()
 
     self.dialog_lines = nil
     self.dialog_idx = 1
@@ -107,8 +143,7 @@ end
 
 function scene:exit()
     scene.super.exit(self)
-    self.coin_imgs = nil
-    self.coin_imgs_large = nil
+    -- Module-scoped caches deliberately survive scene exit.
 end
 
 function scene:_coin_at(cursor) return cursor - 1 end
@@ -229,7 +264,16 @@ scene.inputHandler = {
 -- ============================================================
 -- DRAW
 -- ============================================================
-local function draw_coin_cell(self, i)
+-- Total grid block extent (4 cols wide x 6 rows tall) — used to size the
+-- baked offscreen image. We bake the full screen width so the offscreen
+-- image can be blitted at (0, 0) without offset math.
+local GRID_BAKE_W = SCREEN_W
+local GRID_BAKE_H = GRID_Y + ROWS * (CELL_H + CELL_GAP_Y) + 4
+
+-- Static cell render — bakeable. Renders the cell box + id label + coin
+-- image + status label. Does NOT draw the cursor highlight (that's per-frame
+-- and lives on top of the baked image).
+local function draw_coin_cell_static(self, i)
     local id  = i - 1
     local col = (i - 1) % COLS
     local row = math.floor((i - 1) / COLS)
@@ -252,11 +296,50 @@ local function draw_coin_cell(self, i)
                or 'LOCKED'
     gfx.drawTextAligned(label, x + CELL_W / 2, y + CELL_H - 11,
                         kTextAlignment.center)
+end
 
-    if i == self.cursor then
-        gfx.drawRoundRect(x - 2, y - 2, CELL_W + 4, CELL_H + 4, 3)
-        gfx.drawRoundRect(x - 3, y - 3, CELL_W + 6, CELL_H + 6, 4)
+-- Per-frame cursor overlay — drawn over the baked grid image. The cursor
+-- moves on every D-pad press, so it cannot be baked.
+local function draw_cursor_overlay(self)
+    local i = self.cursor
+    local col = (i - 1) % COLS
+    local row = math.floor((i - 1) / COLS)
+    local x   = GRID_X + col * (CELL_W + CELL_GAP_X)
+    local y   = GRID_Y + row * (CELL_H + CELL_GAP_Y)
+    gfx.drawRoundRect(x - 2, y - 2, CELL_W + 4, CELL_H + 4, 3)
+    gfx.drawRoundRect(x - 3, y - 3, CELL_W + 6, CELL_H + 6, 4)
+end
+
+-- Build a fingerprint string of all 24 coin statuses. Used as a cheap
+-- cache key so we only re-bake when something actually changed since the
+-- last enter (e.g. a minigame minted a coin between Playground -> Vault).
+local function _grid_status_fingerprint(self)
+    local parts = {}
+    for i = 0, TOTAL_COINS - 1 do
+        parts[#parts + 1] = self:_coin_status(i):sub(1, 1)  -- m/a/l
     end
+    return table.concat(parts)
+end
+
+-- Re-render the 24 static cells into the module-scoped _shared_grid_baked
+-- IF the coin-status fingerprint has changed since last bake. Cost on
+-- cache hit: 24 char compares. Cost on miss: one off-screen render
+-- (~96 draw calls), paid only on state-change, not per frame.
+function scene:_rebake_grid_if_dirty()
+    local fp = _grid_status_fingerprint(self)
+    if _shared_grid_baked and _shared_grid_status == fp then
+        self._grid_baked = _shared_grid_baked
+        return
+    end
+    local img = gfx.image.new(GRID_BAKE_W, GRID_BAKE_H, gfx.kColorClear)
+    if not img then return end
+    gfx.pushContext(img)
+        gfx.setColor(gfx.kColorBlack)
+        for i = 1, TOTAL_COINS do draw_coin_cell_static(self, i) end
+    gfx.popContext()
+    _shared_grid_baked = img
+    _shared_grid_status = fp
+    self._grid_baked = img
 end
 
 local function draw_top_bar()
@@ -340,7 +423,16 @@ function scene:drawBackground()
     draw_top_bar()
 
     if not self.zoomed then
-        for i = 1, TOTAL_COINS do draw_coin_cell(self, i) end
+        -- Phase 14 perf fix #1: blit the baked grid (1 image draw) instead
+        -- of redrawing 24 cells (~96 draw calls). Cursor highlight is
+        -- still drawn per-frame on top because the cursor moves.
+        if self._grid_baked then
+            self._grid_baked:draw(0, 0)
+        else
+            -- Defensive fallback if bake failed for some reason.
+            for i = 1, TOTAL_COINS do draw_coin_cell_static(self, i) end
+        end
+        draw_cursor_overlay(self)
     else
         local id = self:_coin_at(self.cursor)
         local closeup = self.coin_imgs_large[id] or self.locked_img

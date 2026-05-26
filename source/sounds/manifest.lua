@@ -87,9 +87,48 @@ function M.stop_scene_music()
     M._currentPath = nil
 end
 
+-- Phase 14 perf fix #4: pre-cache one sampleplayer per SFX path at boot.
+-- Hardware audit FAIL — previously every play_sfx() call did
+-- `playdate.sound.sampleplayer.new(path)`, which re-opens the audio file
+-- on every shot. Now we build one cached sampleplayer per path at boot
+-- and reuse it via :play(1). Variant lists become arrays of cached
+-- sampleplayers indexed the same way the variant id was indexed before.
+M._sfx_cache = {}
+
+local function _new_sampler(path)
+    if not path then return nil end
+    return playdate.sound.sampleplayer.new(path)
+end
+
+function M.preload_sfx()
+    for name, target in pairs(M.sfx_paths) do
+        if type(target) == 'table' then
+            local variants = {}
+            for i, v in ipairs(target) do
+                variants[i] = _new_sampler(v)
+            end
+            M._sfx_cache[name] = variants
+        else
+            M._sfx_cache[name] = _new_sampler(target)
+        end
+    end
+end
+
 -- Play a one-shot SFX by manifest name. No-ops if the name is unknown so
--- callers don't need to guard every call.
+-- callers don't need to guard every call. Uses the pre-cached sampleplayer
+-- built by preload_sfx() at boot; if the cache is cold (e.g. unit-test
+-- import path) we fall back to constructing one on demand.
 function M.play_sfx(name)
+    local cached = M._sfx_cache[name]
+    if cached ~= nil then
+        local p = cached
+        if type(p) == 'table' then
+            p = p[math.random(#p)]
+        end
+        if p then p:play(1) end
+        return
+    end
+    -- Cold-cache fallback (preload_sfx not called yet).
     local target = M.sfx_paths[name]
     if not target then return end
     if type(target) == 'table' then

@@ -24,6 +24,12 @@ import 'sounds/manifest'
 -- keeps the dependency direction one-way + obvious.
 import 'systems/SceneRouter'
 
+-- Phase 14: DebugOverlay (system-menu-toggled perf HUD) imported before
+-- scenes so they can reference it from drawForeground. It's a no-op when
+-- DebugOverlay.enabled is false, so leaving the call in scene draw paths
+-- is free in release.
+import 'systems/DebugOverlay'
+
 import 'sprites/Newb'
 import 'scenes/TitleScene'
 import 'scenes/SpriteTestScene'   -- importable for ad-hoc sprite testing
@@ -41,6 +47,13 @@ Noble.showFPS = false
 -- Seed progression scaffold (idempotent — pulls coin defaults from
 -- coins.json on first run, leaves existing state alone after).
 if Progression and Progression.init then Progression.init() end
+
+-- Phase 14 perf fix #4: pre-cache every SFX sampleplayer at boot.
+-- Replaces the per-shot `sampleplayer.new(path)` cost with a single
+-- `:play(1)` on a warm instance. Audit cross-cutting FAIL #6.
+if sound_manifest and sound_manifest.preload_sfx then
+    sound_manifest.preload_sfx()
+end
 
 -- Boot-time canon sanity sweep — fail loudly on any undeclared id reference.
 -- Catches drift between generated manifests and runtime expectations. The
@@ -107,4 +120,25 @@ if menu then
     menu:addMenuItem('back to story', function()
         restore_checkpoint()
     end)
+    -- Phase 14: debug overlay toggle. Starts OFF; ship default. Persists
+    -- across the session only — not saved to GameData. (Audit's design
+    -- floats GameData persistence as an option; deferred to keep this
+    -- patch surgical.)
+    menu:addMenuItem('debug overlay', function()
+        if DebugOverlay and DebugOverlay.toggle then DebugOverlay.toggle() end
+    end)
+end
+
+-- Phase 14: DebugOverlay draws after every Noble frame so it floats on
+-- top of the transition canvas. Hook into playdate.update by wrapping
+-- the existing handler Noble installed (`playdate.update = Noble.update`).
+-- This wrapper is a no-op when DebugOverlay.enabled is false.
+local _noble_update = playdate.update
+if _noble_update then
+    playdate.update = function()
+        _noble_update()
+        if DebugOverlay and DebugOverlay.draw then
+            DebugOverlay.draw()
+        end
+    end
 end

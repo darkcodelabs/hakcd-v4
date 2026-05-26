@@ -19,6 +19,38 @@ BedroomScene.backgroundColor = playdate.graphics.kColorWhite
 
 local LEVEL_NAME = 'Bedroom'
 
+-- Phase 14 perf fix #3: cache tilemap + empty-tile-ID + entity lookups at
+-- module scope so re-entering Bedroom from a modal (Computer/Modem/Phone/
+-- Playground) doesn't rebuild LDtk structures. Noble instantiates a fresh
+-- scene per transition (`queuedScene = NewScene(...)`), so init() runs
+-- per-entry — module-level cache is the only place these are paid once.
+local _level_built       = false
+local _cached_layer_meta = nil  -- list of { name, tilemap, empty_ids, z }
+local _cached_entities   = nil  -- LDtk.get_entities(LEVEL_NAME)
+
+local function _build_level_caches()
+    if _level_built then return end
+    local layers = LDtk.get_layers(LEVEL_NAME) or {}
+    _cached_layer_meta = {}
+    for layerName, layer in pairs(layers) do
+        if layer.tiles then
+            local tm = LDtk.create_tilemap(LEVEL_NAME, layerName)
+            if tm then
+                local empty = LDtk.get_empty_tileIDs(LEVEL_NAME, 'Solid', layerName)
+                local z = (layerName == 'Foreground') and 10 or 0
+                table.insert(_cached_layer_meta, {
+                    name      = layerName,
+                    tilemap   = tm,
+                    empty_ids = empty,
+                    z         = z,
+                })
+            end
+        end
+    end
+    _cached_entities = LDtk.get_entities(LEVEL_NAME)
+    _level_built = true
+end
+
 function BedroomScene:init()
     BedroomScene.super.init(self)
     -- LDtk.load() caches all level data globally; safe to call repeatedly,
@@ -27,6 +59,12 @@ function BedroomScene:init()
         LDtk.load('levels/world.ldtk')
         _G._hakcd_ldtk_loaded = true
     end
+    -- Build (or no-op if already built) the tilemap + entity caches.
+    -- Sprites themselves are NOT cached here — Noble's finish() removes
+    -- the previous scene's sprites at transition midpoint, so we have to
+    -- re-create the sprite shells per enter. But the heavy tilemap and
+    -- entity-table builds are now paid once.
+    _build_level_caches()
 end
 
 function BedroomScene:enter(previousScene)
@@ -38,32 +76,21 @@ function BedroomScene:enter(previousScene)
 
     local gfx = playdate.graphics
 
-    -- Walk each tile layer in the LDtk level explicitly so we never depend on
-    -- pairs() ordering for what becomes the "main" tilemap. Background sits
-    -- at zIndex 0, Foreground at 10. Both layers contribute solid tiles to
-    -- the collision system via addWallSprites — empty tile ids per layer are
-    -- looked up from the LDtk Solid enum tag.
-    local layers = LDtk.get_layers(LEVEL_NAME) or {}
-    for layerName, layer in pairs(layers) do
-        if layer.tiles then
-            local tm = LDtk.create_tilemap(LEVEL_NAME, layerName)
-            if tm then
-                local layerSprite = gfx.sprite.new()
-                layerSprite:setTilemap(tm)
-                layerSprite:setCenter(0, 0)
-                layerSprite:moveTo(0, 0)
-                local z = (layerName == 'Foreground') and 10 or 0
-                layerSprite:setZIndex(z)
-                layerSprite:add()
-                local empty = LDtk.get_empty_tileIDs(LEVEL_NAME, 'Solid', layerName)
-                if empty then
-                    gfx.sprite.addWallSprites(tm, empty)
-                end
-                if layerName == 'Background' then self.bgSprite = layerSprite end
-                if layerName == 'Foreground' then self.fgSprite = layerSprite end
-                self.tilemap = self.tilemap or tm
-            end
+    -- Build per-enter sprite shells from the cached tilemap meta. Cheap:
+    -- sprite.new() + setTilemap(cached) + addWallSprites(cached).
+    for _, meta in ipairs(_cached_layer_meta) do
+        local layerSprite = gfx.sprite.new()
+        layerSprite:setTilemap(meta.tilemap)
+        layerSprite:setCenter(0, 0)
+        layerSprite:moveTo(0, 0)
+        layerSprite:setZIndex(meta.z)
+        layerSprite:add()
+        if meta.empty_ids then
+            gfx.sprite.addWallSprites(meta.tilemap, meta.empty_ids)
         end
+        if meta.name == 'Background' then self.bgSprite = layerSprite end
+        if meta.name == 'Foreground' then self.fgSprite = layerSprite end
+        self.tilemap = self.tilemap or meta.tilemap
     end
 
     -- Spawn the newb at player_spawn entity if defined, else fall back to
@@ -73,10 +100,9 @@ function BedroomScene:enter(previousScene)
     local sc01_spawn = sc01 and sc01.spawn_points and sc01.spawn_points[1]
     local spawnX = (sc01_spawn and sc01_spawn.x) or 200
     local spawnY = (sc01_spawn and sc01_spawn.y) or 168
-    local spawns = LDtk.get_entities(LEVEL_NAME, 'Hotspots') -- check all layers
     -- The importer attaches entities to the layer that contains them.
     -- We look for the player_spawn entity by name across all entity layers.
-    local all = LDtk.get_entities(LEVEL_NAME)
+    local all = _cached_entities
     if all then
         for _, ent in ipairs(all) do
             if ent.name == 'player_spawn' then
@@ -114,9 +140,10 @@ function BedroomScene:enter(previousScene)
         self.newb = stand
     end
 
-    -- Hotspot trigger sprites. Walk over -> activeHotspot is set.
+    -- Hotspot trigger sprites. Walk over -> activeHotspot is set. Walks
+    -- the cached entity list rather than re-querying LDtk per enter.
     self.hotspots = {}
-    local hsList = LDtk.get_entities(LEVEL_NAME, 'Hotspots') or {}
+    local hsList = _cached_entities or {}
     for _, ent in ipairs(hsList) do
         if ent.name == 'Hotspot' then
             local hs = gfx.sprite.new()
@@ -144,12 +171,28 @@ function BedroomScene:update()
         self.newb:updateMovement()
     end
 
-    -- Hotspot overlap detect — find which hotspot trigger newb overlaps.
+    -- Phase 14 perf fix #5: replace per-frame `self.newb:overlappingSprites()`
+    -- (which the SDK returns as a fresh Lua table each call) with manual
+    -- rect-intersection against our cached self.hotspots list. Zero
+    -- per-frame allocation. Sprite bounds are pulled directly off the
+    -- sprite without going through getBoundsRect()'s playdate.geometry
+    -- allocator.
     local active = nil
-    if self.newb then
-        local overlapping = self.newb:overlappingSprites()
-        for _, s in ipairs(overlapping) do
-            if s.hotspot_id then active = s; break end
+    if self.newb and self.hotspots then
+        local nx, ny = self.newb.x, self.newb.y
+        local nw, nh = self.newb.width or 32, self.newb.height or 32
+        -- Newb sprite uses default center (0.5, 0.5) per AnimatedSprite,
+        -- so x/y are the CENTER. Translate to top-left for rect math.
+        local nl, nt = nx - nw / 2, ny - nh / 2
+        local nr, nb = nl + nw, nt + nh
+        for i = 1, #self.hotspots do
+            local hs = self.hotspots[i]
+            -- Hotspots use setCenter(0,0) so hs.x/y are TOP-LEFT.
+            local hl, ht = hs.x, hs.y
+            local hr, hb = hl + (hs.width or 24), ht + (hs.height or 24)
+            if nl < hr and nr > hl and nt < hb and nb > ht then
+                if hs.hotspot_id then active = hs; break end
+            end
         end
     end
     self.activeHotspot = active
