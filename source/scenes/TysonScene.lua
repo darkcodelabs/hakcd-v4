@@ -107,7 +107,10 @@ end
 
 function scene:_exit_back()
     if self._return_scene then
-        Noble.transition(self._return_scene)
+        -- Phase 11: SceneRouter.transition is the class-pass-through variant;
+        -- _return_scene is the class handed in via PlaygroundScene's launch
+        -- args, not a canon scene_id.
+        SceneRouter.transition(self._return_scene)
     end
 end
 

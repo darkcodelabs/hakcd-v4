@@ -142,23 +142,20 @@ function PlaygroundScene:update()
     -- CoinVaultScene); the six tier-2/3 placeholders (rfid_pedestal /
     -- payphone / ir_wall / gravity_arena / subghz_tuner / portal_pedestal)
     -- have launches=nil and fall into the else branch. Each minigame is
-    -- told to come back to PlaygroundScene via return_scene. Phase 11
-    -- (SceneRouter) will fold this dispatch into a generic table-driven
-    -- router; for now we keep the explicit chain so behaviour is unchanged.
+    -- told to come back to PlaygroundScene via return_scene. Phase 11:
+    -- dispatch goes through SceneRouter.transition_by_id so the canon-id
+    -- lookup + class resolution + missing-class warning all happen once
+    -- in one place. We still pass return_scene as the args payload so the
+    -- minigame's exit path can Noble.transition straight back.
     if playdate.buttonJustPressed(playdate.kButtonA) and self.activeHotspot then
         local id = self.activeHotspot.hotspot_id
-        local lockpick_launch = _G[canon.objects.lockpick_station.launches]
-        local tyson_launch    = _G[canon.objects.tyson_cabinet.launches]
-        local vault_launch    = _G[canon.objects.coin_vault.launches]
-        if id == canon.objects.lockpick_station.id and lockpick_launch then
-            Noble.transition(lockpick_launch, nil, nil, nil,
-                             { return_scene = PlaygroundScene })
-        elseif id == canon.objects.tyson_cabinet.id and tyson_launch then
-            Noble.transition(tyson_launch, nil, nil, nil,
-                             { return_scene = PlaygroundScene })
-        elseif id == canon.objects.coin_vault.id and vault_launch then
-            Noble.transition(vault_launch, nil, nil, nil,
-                             { return_scene = PlaygroundScene })
+        local launch_args = { return_scene = PlaygroundScene }
+        if id == canon.objects.lockpick_station.id then
+            SceneRouter.transition_by_id(canon.objects.lockpick_station.launches, launch_args)
+        elseif id == canon.objects.tyson_cabinet.id then
+            SceneRouter.transition_by_id(canon.objects.tyson_cabinet.launches, launch_args)
+        elseif id == canon.objects.coin_vault.id then
+            SceneRouter.transition_by_id(canon.objects.coin_vault.launches, launch_args)
         else
             self._dialog_text = '[placeholder] ' .. tostring(id)
             self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2200

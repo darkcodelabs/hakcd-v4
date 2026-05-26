@@ -210,7 +210,10 @@ function scene:update()
             self._exit_at_ms = 0
             local target = self._return_scene
             if target then
-                Noble.transition(target)
+                -- Phase 11: SceneRouter.transition is the class-pass-through
+                -- variant since _return_scene is a class handed in via the
+                -- launching scene's args payload, not a canon scene_id.
+                SceneRouter.transition(target)
             end
         end
     end

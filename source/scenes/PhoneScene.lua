@@ -41,7 +41,8 @@ function PhoneScene:update()
     if playdate.buttonJustPressed(playdate.kButtonA) then
         self.idx = self.idx + 1
         if self.idx > #LINES then
-            Noble.transition(BedroomScene)
+            -- Phase 11: SceneRouter handles the canon lookup + logging.
+            SceneRouter.transition_by_id('BedroomScene')
         else
             if sound_manifest and sound_manifest.play_sfx then
                 sound_manifest.play_sfx('tyson_digit_select')
@@ -49,7 +50,7 @@ function PhoneScene:update()
         end
     end
     if playdate.buttonJustPressed(playdate.kButtonB) then
-        Noble.transition(BedroomScene)
+        SceneRouter.transition_by_id('BedroomScene')
     end
 end
 

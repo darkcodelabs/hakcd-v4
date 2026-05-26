@@ -158,19 +158,19 @@ function BedroomScene:update()
     -- Hotspot id contract lives in canon.lua (canon.objects.<id>); this
     -- block must never compare against a bare string literal. Bed is the
     -- only non-modal — it uses transitions_to (sleep hop), the others use
-    -- launches (modal). Phase 11 (SceneRouter) will fold this dispatch
-    -- into a generic table-driven router; for now we keep the explicit
-    -- if/elseif chain so runtime behaviour is unchanged.
+    -- launches (modal). Phase 11: every dispatch now flows through
+    -- SceneRouter.transition_by_id so the canon-id -> class lookup +
+    -- validation happens in one place.
     if playdate.buttonJustPressed(playdate.kButtonA) and self.activeHotspot then
         local id = self.activeHotspot.hotspot_id
         if id == canon.objects.bed.id then
-            Noble.transition(_G[canon.objects.bed.transitions_to])
+            SceneRouter.transition_by_id(canon.objects.bed.transitions_to)
         elseif id == canon.objects.computer.id then
-            Noble.transition(_G[canon.objects.computer.launches])
+            SceneRouter.transition_by_id(canon.objects.computer.launches)
         elseif id == canon.objects.modem.id then
-            Noble.transition(_G[canon.objects.modem.launches])
+            SceneRouter.transition_by_id(canon.objects.modem.launches)
         elseif id == canon.objects.phone.id then
-            Noble.transition(_G[canon.objects.phone.launches])
+            SceneRouter.transition_by_id(canon.objects.phone.launches)
         else
             self._dialog_text = '[placeholder] ' .. tostring(id)
             self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2200

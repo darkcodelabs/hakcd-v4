@@ -45,9 +45,10 @@ function scene:drawBackground()
 end
 
 local function advance()
-    if BedroomScene then
-        Noble.transition(BedroomScene)
-    end
+    -- Phase 11: route via SceneRouter so the canon-id lookup + transition
+    -- log live in one place. Falls back gracefully if BedroomScene isn't
+    -- yet registered in canon.scenes (router prints + returns false).
+    SceneRouter.transition_by_id('BedroomScene')
 end
 
 scene.inputHandler = {

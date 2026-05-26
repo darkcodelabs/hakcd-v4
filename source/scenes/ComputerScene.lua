@@ -118,7 +118,9 @@ function ComputerScene:update()
     end
 
     if playdate.buttonJustPressed(playdate.kButtonB) then
-        Noble.transition(BedroomScene)
+        -- Phase 11: route through SceneRouter so the canon scene-id lookup
+        -- happens in one place. Return target is the modal's parent room.
+        SceneRouter.transition_by_id('BedroomScene')
     end
 end
 

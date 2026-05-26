@@ -18,6 +18,12 @@ import 'utilities/Progression'
 -- sound_manifest.play_sfx(name) / sound_manifest.music_for(scene_name).
 import 'sounds/manifest'
 
+-- Phase 11: SceneRouter must be live before any scene file is loaded so the
+-- _G.SceneRouter reference resolves at scene-class definition time. Scenes
+-- only *call* it inside update/inputHandler closures, but importing first
+-- keeps the dependency direction one-way + obvious.
+import 'systems/SceneRouter'
+
 import 'sprites/Newb'
 import 'scenes/TitleScene'
 import 'scenes/SpriteTestScene'   -- importable for ad-hoc sprite testing
@@ -82,15 +88,21 @@ end
 local function restore_checkpoint()
     local target_name = _scene_checkpoint
     _scene_checkpoint = nil
-    local target = (target_name and _G[target_name]) or TitleScene
-    Noble.transition(target)
+    -- Prefer the checkpointed scene by id when canon knows about it; fall
+    -- back to TitleScene class direct so this path still works for any
+    -- developer-only scene name that never made it into canon.scenes.
+    if target_name and canon and canon.scenes and canon.scenes[target_name] then
+        SceneRouter.transition_by_id(target_name)
+    else
+        SceneRouter.transition(TitleScene)
+    end
 end
 
 local menu = playdate.getSystemMenu()
 if menu then
     menu:addMenuItem('pwnglove mode', function()
         push_checkpoint()
-        Noble.transition(PlaygroundScene)
+        SceneRouter.transition_by_id('PlaygroundScene')
     end)
     menu:addMenuItem('back to story', function()
         restore_checkpoint()

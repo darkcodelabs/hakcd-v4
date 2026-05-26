@@ -217,7 +217,10 @@ scene.inputHandler = {
             s:_update_dialog_for_cursor()
         else
             if s._return_scene then
-                Noble.transition(s._return_scene)
+                -- Phase 11: pass-through router variant — _return_scene is a
+                -- class passed in via PlaygroundScene's launch args, not a
+                -- canon scene_id.
+                SceneRouter.transition(s._return_scene)
             end
         end
     end

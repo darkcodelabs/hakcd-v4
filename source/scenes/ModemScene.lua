@@ -67,11 +67,13 @@ function ModemScene:update()
     if playdate.buttonJustPressed(playdate.kButtonA) then
         -- Skip / advance through tail end
         if self.stepIdx > #STEPS then
-            Noble.transition(BedroomScene)
+            -- Phase 11: route via SceneRouter so the canon scene-id lookup
+            -- + warning live in one place.
+            SceneRouter.transition_by_id('BedroomScene')
         end
     end
     if playdate.buttonJustPressed(playdate.kButtonB) then
-        Noble.transition(BedroomScene)
+        SceneRouter.transition_by_id('BedroomScene')
     end
 end
 
