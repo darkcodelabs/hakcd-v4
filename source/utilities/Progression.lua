@@ -38,7 +38,17 @@
 --   Progression.pwnglove_mode_complete() -> bool
 --   Progression.set_pwnglove_mode_complete(bool)
 --
+--   Progression.get_flag(flag_id)               typed read, soft-fails unknown ids
+--   Progression.set_flag(flag_id, value)        typed write, HARD-asserts canon
+--   Progression.assert_flag_id(flag_id)         helper: read-side soft check
+--
 --   Progression.dump() -> table   (debug)
+--
+-- Phase 8 (v0.1.19) — runtime canon guards:
+--   WRITES go through Progression.set_flag, which asserts the flag id is in
+--   canon.state_flags. Typo or undeclared flag -> immediate crash on sideload.
+--   READS go through Progression.get_flag, which soft-warns on unknown ids
+--   (a previously-saved game whose flag was retired must not brick on boot).
 
 Progression = {}
 
@@ -105,6 +115,73 @@ local function _save_state(s)
     end
 end
 
+----------------------------------------------------------------------
+-- Canon-guarded typed flag wrappers (Phase 8)
+----------------------------------------------------------------------
+
+-- Read-side helper: returns the canon def for a flag, or nil + logs on
+-- miss. We deliberately do NOT crash on read because a save file may
+-- carry a flag that was retired in a later canon revision; the game must
+-- still boot. Print so the dev sees it on sideload.
+function Progression.assert_flag_id(flag_id)
+    if not (canon and canon.state_flags) then return nil end
+    local def = canon.state_flags[flag_id]
+    if not def then
+        print("[Progression] WARN: unknown state_flag id '" .. tostring(flag_id) ..
+              "' (not in canon.state_flags) — returning nil")
+        return nil
+    end
+    return def
+end
+
+-- Write-side helper: HARD assert. A scene writing an undeclared flag is a
+-- canon-drift bug — surface it loudly, don't let it pollute save state.
+local function _assert_flag_for_write(flag_id)
+    if canon and canon.assert_id then
+        canon.assert_id('state_flags', flag_id)
+    else
+        error("[Progression] canon module missing — cannot guard flag write '" ..
+              tostring(flag_id) .. "'")
+    end
+end
+
+-- get_flag: route every typed read through the canon soft-check, then
+-- dereference the save shape. Coin flags (coin_<N>_status) and the
+-- legacy named flags (tyson_unlock, pwnglove_mode_complete, current_act)
+-- all live in different sub-tables of `state` — this wrapper hides that.
+function Progression.get_flag(flag_id)
+    Progression.assert_flag_id(flag_id)   -- soft-warns on unknown id
+    local s = _get_state()
+    -- Coin status flags: coin_<N>_status -> s.coins[tostring(N)].status
+    local coin_n = string.match(flag_id, '^coin_(%d+)_status$')
+    if coin_n then
+        local c = s.coins[coin_n]
+        if c and c.status then return c.status end
+        local defaults = _load_coin_defaults()
+        local d = defaults[coin_n]
+        return (d and d.status) or 'locked'
+    end
+    -- Named scalar flags live at the top of `state`.
+    return s[flag_id]
+end
+
+-- set_flag: HARD-asserts canon membership, then writes through the
+-- appropriate sub-table.
+function Progression.set_flag(flag_id, value)
+    _assert_flag_for_write(flag_id)
+    local s = _get_state()
+    local coin_n = string.match(flag_id, '^coin_(%d+)_status$')
+    if coin_n then
+        s.coins[coin_n] = s.coins[coin_n] or {}
+        s.coins[coin_n].status = value
+    else
+        s[flag_id] = value
+    end
+    _save_state(s)
+end
+
+----------------------------------------------------------------------
+
 function Progression.init()
     local s = _get_state()
     -- Seed missing coin entries from coins.json defaults
@@ -116,23 +193,15 @@ function Progression.init()
 end
 
 ----------------------------------------------------------------------
--- Coins
+-- Coins  (now thin wrappers over get_flag/set_flag — canon-guarded)
 ----------------------------------------------------------------------
 
 function Progression.coin_status(id)
-    local s = _get_state()
-    local c = s.coins[tostring(id)]
-    if c and c.status then return c.status end
-    local defaults = _load_coin_defaults()
-    local d = defaults[tostring(id)]
-    return (d and d.status) or 'locked'
+    return Progression.get_flag('coin_' .. tostring(id) .. '_status')
 end
 
 function Progression.set_coin_status(id, status)
-    local s = _get_state()
-    s.coins[tostring(id)] = s.coins[tostring(id)] or {}
-    s.coins[tostring(id)].status = status
-    _save_state(s)
+    Progression.set_flag('coin_' .. tostring(id) .. '_status', status)
 end
 
 function Progression.mint_coin(id)
@@ -198,26 +267,23 @@ end
 
 ----------------------------------------------------------------------
 -- Tyson master unlock + playground completion
+-- (now canon-guarded via get_flag/set_flag — preserves boolean coercion)
 ----------------------------------------------------------------------
 
 function Progression.tyson_unlocked()
-    return _get_state().tyson_unlock == true
+    return Progression.get_flag('tyson_unlock') == true
 end
 
 function Progression.set_tyson_unlocked(bool)
-    local s = _get_state()
-    s.tyson_unlock = bool and true or false
-    _save_state(s)
+    Progression.set_flag('tyson_unlock', bool and true or false)
 end
 
 function Progression.pwnglove_mode_complete()
-    return _get_state().pwnglove_mode_complete == true
+    return Progression.get_flag('pwnglove_mode_complete') == true
 end
 
 function Progression.set_pwnglove_mode_complete(bool)
-    local s = _get_state()
-    s.pwnglove_mode_complete = bool and true or false
-    _save_state(s)
+    Progression.set_flag('pwnglove_mode_complete', bool and true or false)
 end
 
 ----------------------------------------------------------------------

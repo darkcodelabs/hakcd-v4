@@ -36,6 +36,29 @@ Noble.showFPS = false
 -- coins.json on first run, leaves existing state alone after).
 if Progression and Progression.init then Progression.init() end
 
+-- Boot-time canon sanity sweep — fail loudly on any undeclared id reference.
+-- Catches drift between generated manifests and runtime expectations. The
+-- Phase 7 validator catches the same drift at build-time; this is the
+-- runtime backstop for sideloaded dev builds that bypassed `make`.
+local function _boot_canon_sanity()
+    assert(canon, 'canon module missing')
+    assert(canon.scenes, 'canon.scenes missing')
+    assert(canon.state_flags, 'canon.state_flags missing')
+    assert(canon.objects, 'canon.objects missing')
+    -- Verify every state_flag entry's id field matches its key
+    for fid, fdef in pairs(canon.state_flags) do
+        assert(fdef.id == fid, 'canon.state_flags['..fid..'].id mismatch')
+    end
+    -- Verify every object.launches resolves to a scene
+    for oid, obj in pairs(canon.objects) do
+        if obj.launches then
+            assert(canon.scenes[obj.launches],
+                'canon.objects['..oid..'].launches='..tostring(obj.launches)..' not in canon.scenes')
+        end
+    end
+end
+_boot_canon_sanity()
+
 -- Boot scene is the canonical title (Agent 4 / PORT). SpriteTestScene is
 -- still importable so devs can wire it in manually for ad-hoc testing.
 Noble.new(TitleScene)
