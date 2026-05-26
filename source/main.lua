@@ -11,6 +11,7 @@ import 'data/canon'
 import 'data/continuity'
 import 'data/assets'
 import 'data/animations'
+import 'data/rooms'
 import 'utilities/Progression'
 
 -- Agent 5 (CONTENT): wires sound_manifest global. Scenes call
