@@ -9,6 +9,7 @@ import 'libraries/gfxp/gfxp'
 import 'utilities/Utilities'
 import 'data/canon'
 import 'data/continuity'
+import 'data/assets'
 import 'utilities/Progression'
 
 -- Agent 5 (CONTENT): wires sound_manifest global. Scenes call
