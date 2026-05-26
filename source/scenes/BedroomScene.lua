@@ -66,8 +66,13 @@ function BedroomScene:enter(previousScene)
         end
     end
 
-    -- Spawn the newb at player_spawn entity if defined, else mid-room.
-    local spawnX, spawnY = 200, 168
+    -- Spawn the newb at player_spawn entity if defined, else fall back to
+    -- the canonical default spawn point in rooms.sc01 (rooms.lua manifest,
+    -- Phase 6). LDtk entity wins over manifest — manifest is the floor.
+    local sc01 = rooms_manifest and rooms_manifest.sc01
+    local sc01_spawn = sc01 and sc01.spawn_points and sc01.spawn_points[1]
+    local spawnX = (sc01_spawn and sc01_spawn.x) or 200
+    local spawnY = (sc01_spawn and sc01_spawn.y) or 168
     local spawns = LDtk.get_entities(LEVEL_NAME, 'Hotspots') -- check all layers
     -- The importer attaches entities to the layer that contains them.
     -- We look for the player_spawn entity by name across all entity layers.
@@ -150,21 +155,22 @@ function BedroomScene:update()
     self.activeHotspot = active
 
     -- A-press: route bedroom hotspots to the right scene / dialog.
-    -- Hotspot id contract (per Agent 3's LDtk authoring):
-    --   bed       -> sleep (transition to PlaygroundScene as the morning hop)
-    --   computer  -> BedroomComputer dialog (placeholder for now)
-    --   modem     -> placeholder dialog
-    --   phone     -> placeholder dialog
+    -- Hotspot id contract lives in canon.lua (canon.objects.<id>); this
+    -- block must never compare against a bare string literal. Bed is the
+    -- only non-modal — it uses transitions_to (sleep hop), the others use
+    -- launches (modal). Phase 11 (SceneRouter) will fold this dispatch
+    -- into a generic table-driven router; for now we keep the explicit
+    -- if/elseif chain so runtime behaviour is unchanged.
     if playdate.buttonJustPressed(playdate.kButtonA) and self.activeHotspot then
         local id = self.activeHotspot.hotspot_id
-        if id == 'bed' then
-            Noble.transition(PlaygroundScene)
-        elseif id == 'computer' then
-            Noble.transition(ComputerScene)
-        elseif id == 'modem' then
-            Noble.transition(ModemScene)
-        elseif id == 'phone' then
-            Noble.transition(PhoneScene)
+        if id == canon.objects.bed.id then
+            Noble.transition(_G[canon.objects.bed.transitions_to])
+        elseif id == canon.objects.computer.id then
+            Noble.transition(_G[canon.objects.computer.launches])
+        elseif id == canon.objects.modem.id then
+            Noble.transition(_G[canon.objects.modem.launches])
+        elseif id == canon.objects.phone.id then
+            Noble.transition(_G[canon.objects.phone.launches])
         else
             self._dialog_text = '[placeholder] ' .. tostring(id)
             self._dialog_until_ms = playdate.getCurrentTimeMilliseconds() + 2200

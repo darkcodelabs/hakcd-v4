@@ -54,7 +54,13 @@ function PlaygroundScene:enter(previousScene)
         end
     end
 
-    local spawnX, spawnY = 200, 168
+    -- Default spawn comes from rooms.playground.spawn_points[1] (rooms.lua
+    -- manifest). LDtk player_spawn entity wins over manifest — manifest is
+    -- the floor so the room is playable even if LDtk authoring lapses.
+    local pg = rooms_manifest and rooms_manifest.playground
+    local pg_spawn = pg and pg.spawn_points and pg.spawn_points[1]
+    local spawnX = (pg_spawn and pg_spawn.x) or 200
+    local spawnY = (pg_spawn and pg_spawn.y) or 168
     local all = LDtk.get_entities(LEVEL_NAME)
     if all then
         for _, ent in ipairs(all) do
@@ -130,20 +136,28 @@ function PlaygroundScene:update()
     self.activeHotspot = active
 
     -- A-press: route playground hotspots to the right minigame scene.
-    --   lockpick_station -> LockpickScene
-    --   tyson_cabinet    -> TysonScene
-    --   coin_vault       -> CoinVaultScene
-    -- Each minigame is told to come back to PlaygroundScene via return_scene.
+    -- Hotspot ids + scene targets are read from canon.objects.<id>; this
+    -- block must never compare against a bare string literal. The three
+    -- tier-1 hotspots have launches set (LockpickScene / TysonScene /
+    -- CoinVaultScene); the six tier-2/3 placeholders (rfid_pedestal /
+    -- payphone / ir_wall / gravity_arena / subghz_tuner / portal_pedestal)
+    -- have launches=nil and fall into the else branch. Each minigame is
+    -- told to come back to PlaygroundScene via return_scene. Phase 11
+    -- (SceneRouter) will fold this dispatch into a generic table-driven
+    -- router; for now we keep the explicit chain so behaviour is unchanged.
     if playdate.buttonJustPressed(playdate.kButtonA) and self.activeHotspot then
         local id = self.activeHotspot.hotspot_id
-        if id == 'lockpick_station' and _G.LockpickScene then
-            Noble.transition(LockpickScene, nil, nil, nil,
+        local lockpick_launch = _G[canon.objects.lockpick_station.launches]
+        local tyson_launch    = _G[canon.objects.tyson_cabinet.launches]
+        local vault_launch    = _G[canon.objects.coin_vault.launches]
+        if id == canon.objects.lockpick_station.id and lockpick_launch then
+            Noble.transition(lockpick_launch, nil, nil, nil,
                              { return_scene = PlaygroundScene })
-        elseif id == 'tyson_cabinet' and _G.TysonScene then
-            Noble.transition(TysonScene, nil, nil, nil,
+        elseif id == canon.objects.tyson_cabinet.id and tyson_launch then
+            Noble.transition(tyson_launch, nil, nil, nil,
                              { return_scene = PlaygroundScene })
-        elseif id == 'coin_vault' and _G.CoinVaultScene then
-            Noble.transition(CoinVaultScene, nil, nil, nil,
+        elseif id == canon.objects.coin_vault.id and vault_launch then
+            Noble.transition(vault_launch, nil, nil, nil,
                              { return_scene = PlaygroundScene })
         else
             self._dialog_text = '[placeholder] ' .. tostring(id)
