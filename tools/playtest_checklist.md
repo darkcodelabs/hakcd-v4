@@ -1,7 +1,7 @@
 # HAKCD Playtest Checklist
 
-**Applies to:** v0.1.15+ (every release through v0.1.X until superseded)
-**Authoring sprint:** Phase 13 / v0.1.23 will commit the formal release tag for this checklist. v0.1.15 ships only the **draft**.
+**Applies to:** v0.1.26+ (formally adopted — every release through v0.1.X until superseded)
+**Authoring sprint:** Phase 13 / v0.1.26. Draft landed at v0.1.15 (`27305d6`); SceneRouter (Phase 11 `ba9aeab`) + Progression flag migration (Phase 12 `d0ad9ba`) verified against the transition + flag tables below.
 **Source-of-truth:** `source/data/canon.lua` (ids), `source/data/continuity.lua` (transition map + flag rules), `source/data/animations.lua` (newb state machine), `source/sounds/manifest.lua` (music + SFX wiring).
 **Build target:** Playdate hardware (rev A and rev B). Simulator is an acceptable smoke check but is NOT a substitute for hardware verification.
 
